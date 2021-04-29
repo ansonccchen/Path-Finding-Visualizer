@@ -1,7 +1,18 @@
-import React from "react"
+import React, { RefObject } from "react"
 import { css } from "emotion"
 
-const Div: React.FC = ({
+interface Props {
+  children?: React.ReactNode
+  className?: any
+  onClick?(event: React.MouseEvent<HTMLDivElement>): void
+  style?: React.CSSProperties
+  tabIndex?: number
+  "data-aos"?: any
+  forwardedRef?: any
+  [key: string]: any
+}
+
+const Div: React.FC<Props> = ({
   children,
   className: customClassName,
   "data-aos": dataAOS,
@@ -84,6 +95,7 @@ const Div: React.FC = ({
       case "borderWidth":
       case "maxWidth":
       case "minWidth":
+      case "minHeight":
       case "zIndex":
       case "overflow":
       case "overflowX":
@@ -97,7 +109,7 @@ const Div: React.FC = ({
 
   return (
     <div
-      ref={forwardedRef}
+      ref={(forwardedRef as unknown) as React.RefObject<HTMLDivElement>}
       className={css(style)}
       onClick={onClick}
       data-aos={dataAOS}
@@ -108,7 +120,21 @@ const Div: React.FC = ({
   )
 }
 
-const styles = {
+interface Styles {
+  baseStyle: any
+  row: any
+  fill: any
+  alignSelfCenter: any
+  alignItemsCenter: any
+  center: any
+  alignItemsStart: any
+  alignItemsEnd: any
+  justifyContentCenter: any
+  justifyContentBetween: any
+  [key: string]: any
+}
+
+const styles: Styles = {
   baseStyle: css({
     display: "flex",
     flexDirection: "column",
@@ -143,6 +169,6 @@ const styles = {
   }),
 }
 
-export default React.forwardRef((props, ref) => (
-  <Div forwardedRef={ref} {...props} />
-))
+export default React.forwardRef<RefObject<HTMLDivElement>, Props>(
+  (props, ref) => <Div forwardedRef={ref} {...props} />
+)

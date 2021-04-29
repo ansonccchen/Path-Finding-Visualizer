@@ -4,7 +4,7 @@ import { PathFinderVisualizer } from "./PathFinderVisualizer"
 const App: React.FC = () => {
   return (
     <div>
-      <PathFinderVisualizer></PathFinderVisualizer>
+      <PathFinderVisualizer />
     </div>
   )
 }
