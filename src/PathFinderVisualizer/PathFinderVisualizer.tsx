@@ -7,7 +7,13 @@ const PathFinderVisualizer: React.FC = () => {
   const [board, setBoard] = useState<any[any]>([[]])
 
   return (
-    <Div fill minHeight="100vh">
+    <Div
+      fill
+      minHeight="100vh"
+      minWidth={1000}
+      backgroundColor="black"
+      overflowX="auto"
+    >
       <TopBar board={board} />
       <Board board={board} setBoard={setBoard} />
     </Div>

@@ -12,14 +12,14 @@ interface Props {
 const Board: React.FC<Props> = ({ board, setBoard }) => {
   useEffect(() => {
     const nodes = []
-    for (let row = 0; row < 15; row++) {
+    for (let row = 0; row < 25; row++) {
       const _row = []
-      for (let col = 0; col < 45; col++) {
+      for (let col = 0; col < 50; col++) {
         const node = {
           col,
           distance: Infinity,
-          isEnd: row === 7 && col === 40,
-          isStart: row === 7 && col === 20,
+          isEnd: row === 10 && col === 35,
+          isStart: row === 10 && col === 15,
           isVisited: false,
           prevNode: null,
           row,
@@ -32,33 +32,37 @@ const Board: React.FC<Props> = ({ board, setBoard }) => {
   }, [setBoard])
 
   return (
-    <Div alignSelfCenter backgroundColor={colors.darkShade} fill>
-      <Div p={40} w={1440}>
+    <Div backgroundColor={colors.darkShade} fill>
+      <Div p={40}>
         <Grid container>
-          {board.map((row: [], rowIndex: number) =>
-            row.map(
-              (
-                node: {
-                  isStart: boolean
-                  isEnd: boolean
-                  row: number
-                  col: number
-                },
-                columnIndex: number
-              ) => {
-                const { isStart, isEnd, row, col } = node
-                return (
-                  <Node
-                    key={String(columnIndex + rowIndex)}
-                    col={col}
-                    isEnd={isEnd}
-                    isStart={isStart}
-                    row={row}
-                  />
-                )
-              }
+          {board.map((row: [], rowIndex: number) => {
+            return (
+              <Grid container item key={String(rowIndex)}>
+                {row.map(
+                  (
+                    node: {
+                      isStart: boolean
+                      isEnd: boolean
+                      row: number
+                      col: number
+                    },
+                    columnIndex: number
+                  ) => {
+                    const { isStart, isEnd, row, col } = node
+                    return (
+                      <Node
+                        key={String(columnIndex + rowIndex)}
+                        col={col}
+                        isEnd={isEnd}
+                        isStart={isStart}
+                        row={row}
+                      />
+                    )
+                  }
+                )}
+              </Grid>
             )
-          )}
+          })}
         </Grid>
       </Div>
     </Div>
