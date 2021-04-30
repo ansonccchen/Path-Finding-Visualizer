@@ -1,7 +1,7 @@
 export const colors = {
-  darkAccent: "#F1827A",
-  darkShade: "#884C48",
-  lightAccent: "#DBB5B3",
-  lightShade: "#F6F9F8",
-  main: "#F4A290",
+  darkAccent: "#8663EA",
+  darkShade: "#252236",
+  lightAccent: "#97A9EC",
+  lightShade: "#F5F5F1",
+  main: "#576DCC",
 }
