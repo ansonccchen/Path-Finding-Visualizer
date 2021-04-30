@@ -9,7 +9,7 @@ const PathFinderVisualizer: React.FC = () => {
   const nodeRefs = useRef({})
 
   return (
-    <Div fill minHeight="100vh" minWidth={1256} overflowX="auto">
+    <Div fill minHeight="100vh" minWidth={1304} overflowX="auto">
       <TopBar board={board} nodeRefs={nodeRefs} />
       <Board board={board} setBoard={setBoard} nodeRefs={nodeRefs} />
       {/* <Footer /> */}

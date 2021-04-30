@@ -67,15 +67,22 @@ const TopBar: React.FC<Props> = ({ board, nodeRefs }) => {
   }
   const clearWalls = () => {}
 
-  const animateShortestPath = ({ shortestPath }: { shortestPath: Node[] }) => {
+  const animateShortestPath = ({
+    shortestPath,
+    shortestPathDelay,
+  }: {
+    shortestPath: Node[]
+    shortestPathDelay: number
+  }) => {
     for (let j = 1; j < shortestPath.length; j++) {
       setTimeout(() => {
         nodeRefs.current[
           `${shortestPath[j].row}-${shortestPath[j].col}`
         ].style.backgroundColor = colors.lightAccent
-      }, 25 * j)
+      }, shortestPathDelay * j)
     }
   }
+
   const animateAlgorithm = async ({
     visitedNodesInOrder,
     shortestPath,
@@ -84,10 +91,11 @@ const TopBar: React.FC<Props> = ({ board, nodeRefs }) => {
     shortestPath: Node[]
   }) => {
     const delay = algoSpeeds[selectedAlgoSpeed]
+    const shortestPathDelay = 25
     for (let i = 1; i < visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length - 1) {
         setTimeout(() => {
-          animateShortestPath({ shortestPath })
+          animateShortestPath({ shortestPath, shortestPathDelay })
         }, delay * i)
       } else {
         setTimeout(() => {
@@ -97,6 +105,13 @@ const TopBar: React.FC<Props> = ({ board, nodeRefs }) => {
         }, delay * i)
       }
     }
+    return new Promise((resolve) => {
+      setTimeout(
+        resolve,
+        delay * visitedNodesInOrder.length +
+          shortestPath.length * shortestPathDelay
+      )
+    })
   }
 
   return (
@@ -153,7 +168,7 @@ const TopBar: React.FC<Props> = ({ board, nodeRefs }) => {
         <Div w={32} />
         <Button onClick={startVisualizer} disabled={isVisualizing}>
           <Div
-            backgroundColor={colors.darkAccent}
+            backgroundColor={isVisualizing ? "#9e9e9e" : colors.darkAccent}
             pv={8}
             ph={16}
             borderRadius={4}
@@ -164,13 +179,13 @@ const TopBar: React.FC<Props> = ({ board, nodeRefs }) => {
           </Div>
         </Button>
         <Div w={32} />
-        <Button onClick={resetBoard}>
+        <Button onClick={resetBoard} disabled={isVisualizing}>
           <Typography variant="h6" style={styles.text}>
             Reset Board
           </Typography>
         </Button>
         <Div w={32} />
-        <Button onClick={clearWalls}>
+        <Button onClick={clearWalls} disabled={isVisualizing}>
           <Typography variant="h6" style={styles.text}>
             Clear Walls
           </Typography>
@@ -211,6 +226,19 @@ const SpeedSlider = withStyles({
   },
   track: {
     color: colors.darkAccent,
+  },
+  thumb: {
+    backgroundColor: colors.main,
+  },
+  mark: {
+    backgroundColor: colors.lightAccent,
+    height: 8,
+    marginTop: -3,
+  },
+  markActive: {
+    backgroundColor: colors.main,
+    height: 8,
+    marginTop: -3,
   },
 })(Slider)
 
