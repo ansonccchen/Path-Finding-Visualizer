@@ -8,21 +8,27 @@ interface Props {
   isEnd: boolean
   row: number
   col: number
+  nodeRefs: any
 }
 
-const Node: React.FC<Props> = ({ isStart, isEnd, row, col }) => {
+const Node: React.FC<Props> = ({ isStart, isEnd, row, col, nodeRefs }) => {
   return (
     <Grid item xs>
       <Div
-        backgroundColor={isStart ? colors.main : isEnd ? "green" : "white"}
+        backgroundColor={
+          isStart
+            ? colors.lightAccent
+            : isEnd
+            ? colors.darkAccent
+            : colors.lightShade
+        }
+        ref={(r) => (nodeRefs.current[`${row}-${col}`] = r)}
         borderColor="#cceaf0"
         borderWidth={0.5}
         h={32}
-      >
-        <text>{col}</text>
-      </Div>
+      ></Div>
     </Grid>
   )
 }
 
-export default Node
+export default React.memo(Node)

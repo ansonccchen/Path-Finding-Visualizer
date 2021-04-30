@@ -7,9 +7,10 @@ import { colors } from "../theme"
 interface Props {
   board: [[]]
   setBoard: React.Dispatch<any>
+  nodeRefs: any
 }
 
-const Board: React.FC<Props> = ({ board, setBoard }) => {
+const Board: React.FC<Props> = ({ board, setBoard, nodeRefs }) => {
   useEffect(() => {
     const nodes = []
     for (let row = 0; row < 25; row++) {
@@ -21,6 +22,7 @@ const Board: React.FC<Props> = ({ board, setBoard }) => {
           isEnd: row === 10 && col === 35,
           isStart: row === 10 && col === 15,
           isVisited: false,
+          isWall: false,
           prevNode: null,
           row,
         }
@@ -51,10 +53,11 @@ const Board: React.FC<Props> = ({ board, setBoard }) => {
                     const { isStart, isEnd, row, col } = node
                     return (
                       <Node
-                        key={String(columnIndex + rowIndex)}
+                        key={String(columnIndex)}
                         col={col}
                         isEnd={isEnd}
                         isStart={isStart}
+                        nodeRefs={nodeRefs}
                         row={row}
                       />
                     )
