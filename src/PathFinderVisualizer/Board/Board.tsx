@@ -1,9 +1,9 @@
 import React, { useEffect } from "react"
 import { Grid } from "@material-ui/core"
 import { Div } from "../../components"
-import NodeView from "./NodeView"
 import { colors } from "../../theme"
 import { Node } from "../../types/node"
+import NodeView from "./NodeView"
 
 interface Props {
   board: Node[][]
@@ -61,39 +61,10 @@ const Board: React.FC<Props> = ({
                 {row.map((node: Node, columnIndex: number) => {
                   return (
                     <NodeView
-                      isWall={node.isWall}
-                      onClick={() => {
-                        if (!node.isStart && !node.isEnd && !isVisualizing) {
-                          node.isWall = !node.isWall
-                          nodeRefs.current[
-                            `${node.row}-${node.col}`
-                          ].style.backgroundColor = node.isWall
-                            ? colors.darkShade
-                            : colors.lightShade
-                        }
-                      }}
-                      onMouseOver={() => {
-                        if (!node.isStart && !node.isEnd && !node.isVisited) {
-                          nodeRefs.current[
-                            `${node.row}-${node.col}`
-                          ].style.backgroundColor = colors.darkShade
-                        }
-                      }}
-                      onMouseLeave={() => {
-                        if (!node.isStart && !node.isEnd && !node.isVisited) {
-                          if (!node.isWall) {
-                            nodeRefs.current[
-                              `${node.row}-${node.col}`
-                            ].style.backgroundColor = colors.lightShade
-                          }
-                        }
-                      }}
                       key={String(columnIndex)}
-                      col={node.col}
-                      isEnd={node.isEnd}
-                      isStart={node.isStart}
+                      node={node}
+                      isVisualizing={isVisualizing}
                       nodeRefs={nodeRefs}
-                      row={node.row}
                     />
                   )
                 })}

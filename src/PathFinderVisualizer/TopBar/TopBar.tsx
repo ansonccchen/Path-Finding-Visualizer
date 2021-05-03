@@ -18,7 +18,7 @@ const algorithms = [
 ] as const
 type Algorithms = typeof algorithms[number] | ""
 
-const algoSpeeds = { slow: 15, normal: 7, fast: 2 }
+const algoSpeeds = { slow: 16, normal: 8, fast: 2 }
 const algoSpeedsArray = ["slow", "normal", "fast"] as const
 type AlgoSpeed = typeof algoSpeedsArray[number]
 
@@ -53,7 +53,7 @@ const TopBar: React.FC<Props> = ({
     marks.push({ value: i, label: algoSpeedsArray[i] })
   }
 
-  const startVisualizer = () => {
+  const startVisualizer = async () => {
     const startNode: Node = board?.[DEFAULT_START_ROW]?.[DEFAULT_START_COL]
     const endNode: Node = board?.[DEFAULT_END_ROW]?.[DEFAULT_END_COL]
     for (const row of board) {
@@ -73,6 +73,7 @@ const TopBar: React.FC<Props> = ({
       board,
     })
     setIsVisualizing(true)
+    await new Promise((resolve) => setTimeout(resolve, 200))
     animateAlgorithm({ visitedNodesInOrder, shortestPath }).finally(() =>
       setIsVisualizing(false)
     )
