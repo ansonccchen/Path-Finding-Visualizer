@@ -8,6 +8,7 @@ import { Node } from "../../types/node"
 interface Props {
   board: Node[][]
   setBoard: React.Dispatch<any>
+  isVisualizing: boolean
   nodeRefs: any
 }
 
@@ -16,7 +17,12 @@ const DEFAULT_START_COL = 15
 const DEFAULT_END_ROW = 12
 const DEFAULT_END_COL = 35
 
-const Board: React.FC<Props> = ({ board, setBoard, nodeRefs }) => {
+const Board: React.FC<Props> = ({
+  board,
+  setBoard,
+  isVisualizing,
+  nodeRefs,
+}) => {
   useEffect(() => {
     const nodes = []
     for (let row = 0; row < 25; row++) {
@@ -53,15 +59,41 @@ const Board: React.FC<Props> = ({ board, setBoard, nodeRefs }) => {
             return (
               <Grid container item key={String(rowIndex)}>
                 {row.map((node: Node, columnIndex: number) => {
-                  const { isStart, isEnd, row, col } = node
                   return (
                     <NodeView
+                      isWall={node.isWall}
+                      onClick={() => {
+                        if (!node.isStart && !node.isEnd && !isVisualizing) {
+                          node.isWall = !node.isWall
+                          nodeRefs.current[
+                            `${node.row}-${node.col}`
+                          ].style.backgroundColor = node.isWall
+                            ? colors.darkShade
+                            : colors.lightShade
+                        }
+                      }}
+                      onMouseOver={() => {
+                        if (!node.isStart && !node.isEnd && !node.isVisited) {
+                          nodeRefs.current[
+                            `${node.row}-${node.col}`
+                          ].style.backgroundColor = colors.darkShade
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        if (!node.isStart && !node.isEnd && !node.isVisited) {
+                          if (!node.isWall) {
+                            nodeRefs.current[
+                              `${node.row}-${node.col}`
+                            ].style.backgroundColor = colors.lightShade
+                          }
+                        }
+                      }}
                       key={String(columnIndex)}
-                      col={col}
-                      isEnd={isEnd}
-                      isStart={isStart}
+                      col={node.col}
+                      isEnd={node.isEnd}
+                      isStart={node.isStart}
                       nodeRefs={nodeRefs}
-                      row={row}
+                      row={node.row}
                     />
                   )
                 })}

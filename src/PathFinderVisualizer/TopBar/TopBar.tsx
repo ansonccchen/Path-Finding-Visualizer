@@ -7,6 +7,8 @@ import { Div } from "../../components"
 import { colors } from "../../theme"
 import { dijkstra } from "../../algorithms"
 import { Node } from "../../types/node"
+import { toast, ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 const algorithms = [
   "Dijkstra",
@@ -22,6 +24,8 @@ type AlgoSpeed = typeof algoSpeedsArray[number]
 
 interface Props {
   board: Node[][]
+  isVisualizing: boolean
+  setIsVisualizing: React.Dispatch<React.SetStateAction<boolean>>
   nodeRefs: any
 }
 
@@ -30,7 +34,12 @@ const DEFAULT_START_COL = 15
 const DEFAULT_END_ROW = 12
 const DEFAULT_END_COL = 35
 
-const TopBar: React.FC<Props> = ({ board, nodeRefs }) => {
+const TopBar: React.FC<Props> = ({
+  board,
+  nodeRefs,
+  isVisualizing,
+  setIsVisualizing,
+}) => {
   const classes = useStyles()
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithms>(
     "Dijkstra"
@@ -38,7 +47,6 @@ const TopBar: React.FC<Props> = ({ board, nodeRefs }) => {
   const [selectedAlgoSpeed, setSelectedAlgoSpeed] = useState<AlgoSpeed>(
     "normal"
   )
-  const [isVisualizing, setIsVisualizing] = useState<boolean>(false)
 
   const marks: { value: number; label: AlgoSpeed }[] = []
   for (let i = 0; i < algoSpeedsArray.length; i++) {
@@ -48,12 +56,22 @@ const TopBar: React.FC<Props> = ({ board, nodeRefs }) => {
   const startVisualizer = () => {
     const startNode: Node = board?.[DEFAULT_START_ROW]?.[DEFAULT_START_COL]
     const endNode: Node = board?.[DEFAULT_END_ROW]?.[DEFAULT_END_COL]
+    for (const row of board) {
+      for (const node of row) {
+        node.prevNode = null
+        node.isVisited = false
+        node.distance = Infinity
+        if (!node.isWall) {
+          nodeRefs.current[`${node.row}-${node.col}`].style.background =
+            colors.lightShade
+        }
+      }
+    }
     const { visitedNodesInOrder, shortestPath } = dijkstra({
       startNode,
       endNode,
       board,
     })
-    resetBoard()
     setIsVisualizing(true)
     animateAlgorithm({ visitedNodesInOrder, shortestPath }).finally(() =>
       setIsVisualizing(false)
@@ -61,11 +79,23 @@ const TopBar: React.FC<Props> = ({ board, nodeRefs }) => {
   }
 
   const resetBoard = () => {
-    for (const key in nodeRefs.current) {
-      nodeRefs.current[key].style.background = colors.lightShade
+    for (const row of board) {
+      for (const node of row) {
+        node.isWall = false
+        nodeRefs.current[`${node.row}-${node.col}`].style.background =
+          colors.lightShade
+      }
     }
   }
-  const clearWalls = () => {}
+  const clearWalls = () => {
+    for (const row of board) {
+      for (const node of row) {
+        node.isWall = false
+        nodeRefs.current[`${node.row}-${node.col}`].style.background =
+          colors.lightShade
+      }
+    }
+  }
 
   const animateShortestPath = ({
     shortestPath,
@@ -74,6 +104,10 @@ const TopBar: React.FC<Props> = ({ board, nodeRefs }) => {
     shortestPath: Node[]
     shortestPathDelay: number
   }) => {
+    if (!shortestPath[shortestPath.length - 1].isEnd) {
+      toast.error("No such path found :(")
+      return
+    }
     for (let j = 1; j < shortestPath.length; j++) {
       setTimeout(() => {
         nodeRefs.current[
@@ -115,83 +149,88 @@ const TopBar: React.FC<Props> = ({ board, nodeRefs }) => {
   }
 
   return (
-    <Div
-      backgroundColor={colors.lightShade}
-      row
-      pv={8}
-      ph={24}
-      justifyContentCenter
-    >
-      <Div maxWidth={1704} row alignItemsCenter fill>
-        <Typography variant="h5" style={styles.title}>
-          Path Visualizer
-        </Typography>
-        <Div w={32} />
-        <Div w={200}>
-          <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel>Select Algorithm</InputLabel>
-            <Select
-              value={selectedAlgorithm}
-              onChange={(e) =>
-                setSelectedAlgorithm((e.target.value as unknown) as Algorithms)
-              }
-              label="Select Algorithm"
-            >
-              {algorithms.map((algorithm, index) => {
-                return (
-                  <MenuItem key={index} value={algorithm}>
-                    {algorithm}
-                  </MenuItem>
-                )
-              })}
-            </Select>
-          </FormControl>
-        </Div>
-        <Div w={32} />
-        <Div w={200}>
-          <Typography style={{ color: colors.main }}>
-            Algorithm Speed:
+    <>
+      <Div
+        backgroundColor={colors.lightShade}
+        row
+        pv={8}
+        ph={24}
+        justifyContentCenter
+      >
+        <Div maxWidth={1704} row alignItemsCenter fill>
+          <Typography variant="h5" style={styles.title}>
+            Path Visualizer
           </Typography>
-          <SpeedSlider
-            defaultValue={1}
-            valueLabelFormat={(e, value) =>
-              marks.findIndex((mark) => mark.value === value) + 1
-            }
-            step={null}
-            marks={marks}
-            onChange={(e, value) =>
-              setSelectedAlgoSpeed(algoSpeedsArray[value as number])
-            }
-            max={2}
-          />
-        </Div>
-        <Div w={32} />
-        <Button onClick={startVisualizer} disabled={isVisualizing}>
-          <Div
-            backgroundColor={isVisualizing ? "#9e9e9e" : colors.darkAccent}
-            pv={8}
-            ph={16}
-            borderRadius={4}
-          >
-            <Typography style={styles.buttonText} variant="h6">
-              {isVisualizing ? "Visualizing..." : "Visualize"}
-            </Typography>
+          <Div w={32} />
+          <Div w={200}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel>Select Algorithm</InputLabel>
+              <Select
+                value={selectedAlgorithm}
+                onChange={(e) =>
+                  setSelectedAlgorithm(
+                    (e.target.value as unknown) as Algorithms
+                  )
+                }
+                label="Select Algorithm"
+              >
+                {algorithms.map((algorithm, index) => {
+                  return (
+                    <MenuItem key={index} value={algorithm}>
+                      {algorithm}
+                    </MenuItem>
+                  )
+                })}
+              </Select>
+            </FormControl>
           </Div>
-        </Button>
-        <Div w={32} />
-        <Button onClick={resetBoard} disabled={isVisualizing}>
-          <Typography variant="h6" style={styles.text}>
-            Reset Board
-          </Typography>
-        </Button>
-        <Div w={32} />
-        <Button onClick={clearWalls} disabled={isVisualizing}>
-          <Typography variant="h6" style={styles.text}>
-            Clear Walls
-          </Typography>
-        </Button>
+          <Div w={32} />
+          <Div w={200}>
+            <Typography style={{ color: colors.main }}>
+              Algorithm Speed:
+            </Typography>
+            <SpeedSlider
+              defaultValue={1}
+              valueLabelFormat={(e, value) =>
+                marks.findIndex((mark) => mark.value === value) + 1
+              }
+              step={null}
+              marks={marks}
+              onChange={(e, value) =>
+                setSelectedAlgoSpeed(algoSpeedsArray[value as number])
+              }
+              max={2}
+            />
+          </Div>
+          <Div w={32} />
+          <Button onClick={startVisualizer} disabled={isVisualizing}>
+            <Div
+              backgroundColor={isVisualizing ? "#9e9e9e" : colors.darkAccent}
+              pv={8}
+              ph={16}
+              borderRadius={4}
+            >
+              <Typography style={styles.buttonText} variant="h6">
+                {isVisualizing ? "Visualizing..." : "Visualize"}
+              </Typography>
+            </Div>
+          </Button>
+          <Div w={32} />
+          <Button onClick={resetBoard} disabled={isVisualizing}>
+            <Typography variant="h6" style={styles.text}>
+              Reset Board
+            </Typography>
+          </Button>
+          <Div w={32} />
+          <Button onClick={clearWalls} disabled={isVisualizing}>
+            <Typography variant="h6" style={styles.text}>
+              Clear Walls
+            </Typography>
+          </Button>
+        </Div>
       </Div>
-    </Div>
+      <ToastContainer autoClose={10000} closeButton position="bottom-right" />
+    </>
   )
 }
 

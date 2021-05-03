@@ -5,9 +5,13 @@ interface Props {
   children?: React.ReactNode
   className?: any
   onClick?(event: React.MouseEvent<HTMLDivElement>): void
+  onMouseEnter?(event: React.MouseEvent<HTMLDivElement>): void
+  onMouseDown?(event: React.MouseEvent<HTMLDivElement>): void
+  onMouseUp?(event: React.MouseEvent<HTMLDivElement>): void
+  onMouseOver?(event: React.MouseEvent<HTMLDivElement>): void
+  onMouseLeave?(event: React.MouseEvent<HTMLDivElement>): void
   style?: React.CSSProperties
   tabIndex?: number
-  "data-aos"?: any
   forwardedRef?: any
   [key: string]: any
 }
@@ -15,9 +19,13 @@ interface Props {
 const Div: React.FC<Props> = ({
   children,
   className: customClassName,
-  "data-aos": dataAOS,
   forwardedRef,
   onClick,
+  onMouseDown,
+  onMouseEnter,
+  onMouseUp,
+  onMouseOver,
+  onMouseLeave,
   style: customStyle,
   tabIndex,
   ...props
@@ -112,7 +120,11 @@ const Div: React.FC<Props> = ({
       ref={(forwardedRef as unknown) as React.RefObject<HTMLDivElement>}
       className={css(style)}
       onClick={onClick}
-      data-aos={dataAOS}
+      onMouseOver={onMouseOver}
+      onMouseDown={onMouseDown}
+      onMouseEnter={onMouseEnter}
+      onMouseUp={onMouseUp}
+      onMouseLeave={onMouseLeave}
       tabIndex={tabIndex}
     >
       {children}

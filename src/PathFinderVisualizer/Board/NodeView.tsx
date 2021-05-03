@@ -11,13 +11,30 @@ interface Props {
   row: number
   col: number
   nodeRefs: any
+  isWall: boolean
+  onClick: () => void
+  onMouseOver: () => void
+  onMouseLeave: () => void
 }
 
-const NodeView: React.FC<Props> = ({ isStart, isEnd, row, col, nodeRefs }) => {
+const NodeView: React.FC<Props> = ({
+  isStart,
+  isEnd,
+  row,
+  col,
+  nodeRefs,
+  isWall,
+  onClick,
+  onMouseOver,
+  onMouseLeave,
+}) => {
   return (
     <Grid item xs>
       <Div
-        backgroundColor={colors.lightShade}
+        onClick={onClick}
+        onMouseOver={onMouseOver}
+        onMouseLeave={onMouseLeave}
+        backgroundColor={isWall ? colors.darkShade : colors.lightShade}
         ref={(r) => (nodeRefs.current[`${row}-${col}`] = r)}
         borderColor="#cceaf0"
         borderWidth={0.5}
@@ -36,4 +53,4 @@ const NodeView: React.FC<Props> = ({ isStart, isEnd, row, col, nodeRefs }) => {
   )
 }
 
-export default React.memo(NodeView)
+export default NodeView

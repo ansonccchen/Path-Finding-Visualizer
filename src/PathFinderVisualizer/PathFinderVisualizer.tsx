@@ -7,11 +7,22 @@ import { Footer } from "./Footer"
 const PathFinderVisualizer: React.FC = () => {
   const [board, setBoard] = useState<any[any]>([[]])
   const nodeRefs = useRef({})
+  const [isVisualizing, setIsVisualizing] = useState<boolean>(false)
 
   return (
     <Div fill minHeight="100vh" minWidth={1304} overflowX="auto">
-      <TopBar board={board} nodeRefs={nodeRefs} />
-      <Board board={board} setBoard={setBoard} nodeRefs={nodeRefs} />
+      <TopBar
+        board={board}
+        isVisualizing={isVisualizing}
+        nodeRefs={nodeRefs}
+        setIsVisualizing={setIsVisualizing}
+      />
+      <Board
+        board={board}
+        isVisualizing={isVisualizing}
+        nodeRefs={nodeRefs}
+        setBoard={setBoard}
+      />
       {/* <Footer /> */}
     </Div>
   )
