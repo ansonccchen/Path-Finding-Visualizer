@@ -14,6 +14,9 @@ interface Props {
   onClick?: () => void
   onMouseLeave?: () => void
   onMouseOver?: () => void
+  onMouseDown?: () => void
+  onMouseUp?: () => void
+  onMouseEnter?: () => void
   row: number
 }
 
@@ -25,14 +28,23 @@ const GridNode: React.FC<Props> = ({
   nodeRefs,
   onClick,
   onMouseLeave,
+  onMouseDown,
+  onMouseUp,
   onMouseOver,
+  onMouseEnter,
   row,
 }) => {
   return (
     <Grid item xs>
       <Div
         alignItemsCenter
-        backgroundColor={isWall ? colors.darkShade : colors.lightShade}
+        backgroundColor={
+          isWall
+            ? isStart || isEnd
+              ? colors.lightShade
+              : colors.darkShade
+            : colors.lightShade
+        }
         borderColor="#cceaf0"
         borderWidth={0.5}
         h={32}
@@ -40,6 +52,9 @@ const GridNode: React.FC<Props> = ({
         onClick={onClick}
         onMouseLeave={onMouseLeave}
         onMouseOver={onMouseOver}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+        onMouseEnter={onMouseEnter}
         ref={(r) => (nodeRefs.current[`${row}-${col}`] = r)}
       >
         {isStart && (

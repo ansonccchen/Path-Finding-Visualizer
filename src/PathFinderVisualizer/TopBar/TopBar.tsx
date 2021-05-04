@@ -24,20 +24,29 @@ type AlgoSpeed = typeof algoSpeedsArray[number]
 
 interface Props {
   board: Node[][]
+  DEFAULT_END_COL: number
+  DEFAULT_END_ROW: number
+  DEFAULT_START_COL: number
+  DEFAULT_START_ROW: number
+  hasVisualized: boolean
   isVisualizing: boolean
-  setIsVisualizing: React.Dispatch<React.SetStateAction<boolean>>
   nodeRefs: any
+  setBoard: React.Dispatch<any>
+  setHasVisualized: React.Dispatch<React.SetStateAction<boolean>>
+  setIsVisualizing: React.Dispatch<React.SetStateAction<boolean>>
 }
-
-const DEFAULT_START_ROW = 12
-const DEFAULT_START_COL = 15
-const DEFAULT_END_ROW = 12
-const DEFAULT_END_COL = 35
 
 const TopBar: React.FC<Props> = ({
   board,
-  nodeRefs,
+  DEFAULT_END_COL,
+  DEFAULT_END_ROW,
+  DEFAULT_START_COL,
+  DEFAULT_START_ROW,
+  hasVisualized,
   isVisualizing,
+  nodeRefs,
+  setBoard,
+  setHasVisualized,
   setIsVisualizing,
 }) => {
   const classes = useStyles()
@@ -54,8 +63,15 @@ const TopBar: React.FC<Props> = ({
   }
 
   const startVisualizer = async () => {
-    const startNode: Node = board?.[DEFAULT_START_ROW]?.[DEFAULT_START_COL]
-    const endNode: Node = board?.[DEFAULT_END_ROW]?.[DEFAULT_END_COL]
+    let startNode: Node | null = board?.[DEFAULT_START_ROW]?.[DEFAULT_START_COL]
+    let endNode: Node | null = board?.[DEFAULT_END_ROW]?.[DEFAULT_END_COL]
+    for (const row of board) {
+      for (const node of row) {
+        if (node.isStart) startNode = node
+        else if (node.isEnd) endNode = node
+      }
+    }
+
     for (const row of board) {
       for (const node of row) {
         node.prevNode = null
@@ -74,19 +90,33 @@ const TopBar: React.FC<Props> = ({
     })
     setIsVisualizing(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
-    animateAlgorithm({ visitedNodesInOrder, shortestPath }).finally(() =>
+    animateAlgorithm({ visitedNodesInOrder, shortestPath }).finally(() => {
       setIsVisualizing(false)
-    )
+      !hasVisualized && setHasVisualized(true)
+    })
   }
 
   const resetBoard = () => {
-    for (const row of board) {
-      for (const node of row) {
-        node.isWall = false
-        nodeRefs.current[`${node.row}-${node.col}`].style.background =
-          colors.lightShade
+    const nodes = []
+    for (let row = 0; row < 10; row++) {
+      const _row = []
+      for (let col = 0; col < 10; col++) {
+        const node: Node = {
+          col,
+          distance: Infinity,
+          isEnd: row === DEFAULT_END_ROW && col === DEFAULT_END_COL,
+          isStart: row === DEFAULT_START_ROW && col === DEFAULT_START_COL,
+          isVisited: false,
+          isWall: false,
+          prevNode: null,
+          row,
+        }
+        nodeRefs.current[`${row}-${col}`].style.background = colors.lightShade
+        _row.push(node)
       }
+      nodes.push(_row)
     }
+    setBoard(nodes)
   }
   const clearWalls = () => {
     for (const row of board) {

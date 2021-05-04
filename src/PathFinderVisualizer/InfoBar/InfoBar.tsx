@@ -85,7 +85,7 @@ const InfoBar: React.FC<Props> = () => {
           displayElement={
             <Div w={40} h={40} backgroundColor={colors.lightAccent} />
           }
-          label="Shortest Path"
+          label="Path"
         />
       </Div>
     </Div>

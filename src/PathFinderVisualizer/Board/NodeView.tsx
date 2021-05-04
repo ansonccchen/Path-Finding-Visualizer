@@ -1,18 +1,110 @@
 import React, { useCallback } from "react"
 import { colors } from "../../theme"
 import { Node } from "../../types/node"
-
 import GridNode from "./GridNode"
 
 interface Props {
-  node: Node
+  endPosition: number[]
+  isMovingEndNode: boolean
+  isMovingStartNode: boolean
   isVisualizing: boolean
+  node: Node
   nodeRefs: any
+  redoAlgorithm: () => void
+  setEndPosition: React.Dispatch<React.SetStateAction<number[]>>
+  setIsMovingEndNode: React.Dispatch<React.SetStateAction<boolean>>
+  setIsMovingStartNode: React.Dispatch<React.SetStateAction<boolean>>
+  setStartPosition: React.Dispatch<React.SetStateAction<number[]>>
+  startPosition: number[]
 }
 
-const NodeView: React.FC<Props> = ({ node, isVisualizing, nodeRefs }) => {
+let prevStartNodeRef: Node | null = null
+let prevEndNodeRef: Node | null = null
+
+const NodeView: React.FC<Props> = ({
+  endPosition,
+  isMovingEndNode,
+  isMovingStartNode,
+  isVisualizing,
+  node,
+  nodeRefs,
+  redoAlgorithm,
+  setEndPosition,
+  setIsMovingEndNode,
+  setIsMovingStartNode,
+  setStartPosition,
+  startPosition,
+}) => {
+  const handleOnMouseDown = useCallback(() => {
+    if (isVisualizing) return
+    if (node.isStart) {
+      setIsMovingStartNode(true)
+    } else if (node.isEnd) {
+      setIsMovingEndNode(true)
+    }
+  }, [
+    isVisualizing,
+    node.isEnd,
+    node.isStart,
+    setIsMovingEndNode,
+    setIsMovingStartNode,
+  ])
+
+  const handleOnMouseUp = useCallback(() => {
+    if (isVisualizing) return
+    if (isMovingStartNode) {
+      if (!node.isEnd) {
+        node.isStart = true
+      } else {
+        prevStartNodeRef && (prevStartNodeRef.isStart = true)
+      }
+      setIsMovingStartNode(false)
+    } else if (isMovingEndNode) {
+      if (!node.isStart) {
+        node.isEnd = true
+      } else {
+        prevEndNodeRef && (prevEndNodeRef.isEnd = true)
+      }
+      setIsMovingEndNode(false)
+    }
+  }, [
+    isMovingEndNode,
+    isMovingStartNode,
+    isVisualizing,
+    node,
+    setIsMovingEndNode,
+    setIsMovingStartNode,
+  ])
+
+  const handleOnMouseEnter = useCallback(() => {
+    if (isVisualizing) return
+    if (isMovingStartNode && !node.isEnd) {
+      node.isStart = true
+      setStartPosition([node.row, node.col])
+      redoAlgorithm()
+    } else if (isMovingEndNode && !node.isStart) {
+      node.isEnd = true
+      setEndPosition([node.row, node.col])
+      redoAlgorithm()
+    }
+  }, [
+    isMovingEndNode,
+    isMovingStartNode,
+    isVisualizing,
+    node,
+    redoAlgorithm,
+    setEndPosition,
+    setStartPosition,
+  ])
+
   const handleOnClick = useCallback(() => {
-    if (!node.isStart && !node.isEnd && !isVisualizing) {
+    if (
+      !isMovingEndNode &&
+      !isMovingStartNode &&
+      !isVisualizing &&
+      !node.isEnd &&
+      !node.isStart
+    ) {
       node.isWall = !node.isWall
       nodeRefs.current[
         `${node.row}-${node.col}`
@@ -20,31 +112,48 @@ const NodeView: React.FC<Props> = ({ node, isVisualizing, nodeRefs }) => {
         ? colors.darkShade
         : colors.lightShade
     }
-  }, [node, isVisualizing, nodeRefs])
+  }, [node, isVisualizing, isMovingStartNode, isMovingEndNode, nodeRefs])
 
   const handleOnMouseOver = useCallback(() => {
-    if (!node.isStart && !node.isEnd && !node.isVisited) {
+    if (
+      !isMovingEndNode &&
+      !isMovingStartNode &&
+      !isVisualizing &&
+      !node.isEnd &&
+      !node.isStart &&
+      !node.isVisited
+    ) {
       nodeRefs.current[`${node.row}-${node.col}`].style.backgroundColor =
         colors.darkShade
     }
-  }, [node.col, node.isEnd, node.isStart, node.isVisited, node.row, nodeRefs])
-
-  const handleOnMouseLeave = useCallback(() => {
-    if (!node.isStart && !node.isEnd && !node.isVisited) {
-      if (!node.isWall) {
-        nodeRefs.current[`${node.row}-${node.col}`].style.backgroundColor =
-          colors.lightShade
-      }
-    }
   }, [
+    isMovingEndNode,
+    isMovingStartNode,
+    isVisualizing,
     node.col,
     node.isEnd,
     node.isStart,
     node.isVisited,
-    node.isWall,
     node.row,
     nodeRefs,
   ])
+
+  const handleOnMouseLeave = useCallback(() => {
+    if (isMovingStartNode) {
+      node.isStart = false
+      prevStartNodeRef = node
+    } else if (isMovingEndNode) {
+      node.isEnd = false
+      prevEndNodeRef = node
+    } else {
+      if (!node.isStart && !node.isEnd && !node.isVisited) {
+        if (!node.isWall) {
+          nodeRefs.current[`${node.row}-${node.col}`].style.backgroundColor =
+            colors.lightShade
+        }
+      }
+    }
+  }, [isMovingEndNode, isMovingStartNode, node, nodeRefs])
 
   return (
     <GridNode
@@ -56,6 +165,9 @@ const NodeView: React.FC<Props> = ({ node, isVisualizing, nodeRefs }) => {
       onClick={handleOnClick}
       onMouseLeave={handleOnMouseLeave}
       onMouseOver={handleOnMouseOver}
+      onMouseDown={handleOnMouseDown}
+      onMouseUp={handleOnMouseUp}
+      onMouseEnter={handleOnMouseEnter}
       row={node.row}
     />
   )
