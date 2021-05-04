@@ -3,7 +3,7 @@ import { Div } from "../components"
 import { TopBar } from "./TopBar"
 import { InfoBar } from "./InfoBar"
 import { Board } from "./Board"
-import { Footer } from "./Footer"
+// import { Footer } from "./Footer"
 
 const DEFAULT_START_ROW = 4
 const DEFAULT_START_COL = 3

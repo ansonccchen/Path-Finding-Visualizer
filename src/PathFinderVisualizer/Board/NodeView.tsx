@@ -20,6 +20,8 @@ interface Props {
 
 let prevStartNodeRef: Node | null = null
 let prevEndNodeRef: Node | null = null
+let initalNodeWallState: boolean = false
+// let previousNodeWallState: boolean = false
 
 const NodeView: React.FC<Props> = ({
   endPosition,
@@ -56,7 +58,13 @@ const NodeView: React.FC<Props> = ({
       if (!node.isEnd) {
         node.isStart = true
       } else {
-        prevStartNodeRef && (prevStartNodeRef.isStart = true)
+        if (prevStartNodeRef) {
+          prevStartNodeRef.isStart = true
+          prevStartNodeRef.isWall = false
+          nodeRefs.current[
+            `${prevStartNodeRef.row}-${prevStartNodeRef.col}`
+          ].style.backgroundColor = colors.lightShade
+        }
       }
       setIsMovingStartNode(false)
     } else if (isMovingEndNode) {
@@ -72,17 +80,33 @@ const NodeView: React.FC<Props> = ({
     isMovingStartNode,
     isVisualizing,
     node,
+    nodeRefs,
     setIsMovingEndNode,
     setIsMovingStartNode,
   ])
 
   const handleOnMouseEnter = useCallback(() => {
     if (isVisualizing) return
+
+    const wallCheck = () => {
+      if (node.isWall) {
+        initalNodeWallState = true
+        node.isWall = false
+        nodeRefs.current[`${node.row}-${node.col}`].style.backgroundColor =
+          colors.lightShade
+      }
+    }
+
+    if (isMovingStartNode && node.isEnd) {
+    }
+
     if (isMovingStartNode && !node.isEnd) {
+      wallCheck()
       node.isStart = true
       setStartPosition([node.row, node.col])
       redoAlgorithm()
     } else if (isMovingEndNode && !node.isStart) {
+      wallCheck()
       node.isEnd = true
       setEndPosition([node.row, node.col])
       redoAlgorithm()
@@ -92,6 +116,7 @@ const NodeView: React.FC<Props> = ({
     isMovingStartNode,
     isVisualizing,
     node,
+    nodeRefs,
     redoAlgorithm,
     setEndPosition,
     setStartPosition,
@@ -139,10 +164,20 @@ const NodeView: React.FC<Props> = ({
   ])
 
   const handleOnMouseLeave = useCallback(() => {
+    const wallCheck = () => {
+      if (initalNodeWallState) {
+        initalNodeWallState = false
+        node.isWall = true
+        nodeRefs.current[`${node.row}-${node.col}`].style.backgroundColor =
+          colors.darkShade
+      }
+    }
     if (isMovingStartNode) {
+      wallCheck()
       node.isStart = false
       prevStartNodeRef = node
     } else if (isMovingEndNode) {
+      wallCheck()
       node.isEnd = false
       prevEndNodeRef = node
     } else {
