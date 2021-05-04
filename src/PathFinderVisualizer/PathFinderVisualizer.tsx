@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react"
 import { Div } from "../components"
 import { TopBar } from "./TopBar"
+import { InfoBar } from "./InfoBar"
 import { Board } from "./Board"
 import { Footer } from "./Footer"
 
@@ -17,6 +18,7 @@ const PathFinderVisualizer: React.FC = () => {
         nodeRefs={nodeRefs}
         setIsVisualizing={setIsVisualizing}
       />
+      <InfoBar />
       <Board
         board={board}
         isVisualizing={isVisualizing}

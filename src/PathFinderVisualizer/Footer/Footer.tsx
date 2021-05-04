@@ -6,7 +6,7 @@ import { colors } from "../../theme"
 
 const Footer = () => {
   return (
-    <Div justifyContentCenter backgroundColor={colors.darkShade} pb={8} row>
+    <Div justifyContentCenter backgroundColor={colors.lightShade} pb={8} row>
       <Button>
         <InfoIcon style={{ color: colors.main }} />
         <Div w={4} />

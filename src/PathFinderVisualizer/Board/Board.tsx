@@ -47,11 +47,12 @@ const Board: React.FC<Props> = ({
 
   return (
     <Div
-      backgroundColor={colors.darkShade}
+      backgroundColor={colors.lightShade}
       fill
       alignItemsCenter
       justifyContentCenter
       ph={40}
+      pv={16}
     >
       <Div style={styles.board} maxWidth={1704}>
         <Grid container>
@@ -79,7 +80,7 @@ const Board: React.FC<Props> = ({
 
 const styles = {
   board: {
-    boxShadow: `0px 4px 16px 0 rgba(0, 0, 0, 0.8)`,
+    boxShadow: `0 4px 16px 0 rgba(0, 0, 0, 0.3)`,
   },
 }
 
