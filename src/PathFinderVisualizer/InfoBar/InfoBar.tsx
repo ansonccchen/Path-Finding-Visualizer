@@ -35,6 +35,7 @@ const InfoBar: React.FC<Props> = ({
       <Div maxWidth={1704} row fill>
         <InfoNodeView
           label="Start"
+          tooltip="To move start position, click the start icon on the board and drag anywhere as desired"
           displayElement={
             <Div
               alignItemsCenter
@@ -57,6 +58,7 @@ const InfoBar: React.FC<Props> = ({
         <Div w={48} />
         <InfoNodeView
           label="End"
+          tooltip="To move end position, click the end icon on the board and drag anywhere as desired"
           displayElement={
             <Div
               alignItemsCenter
@@ -79,6 +81,8 @@ const InfoBar: React.FC<Props> = ({
         <Div w={48} />
         <InfoNodeView
           label="Wall"
+          tooltip="Click anywhere on the board to place/remove a wall"
+          isSmallTooltipWidth
           displayElement={
             <Div w={40} h={40} backgroundColor={colors.darkShade} />
           }
