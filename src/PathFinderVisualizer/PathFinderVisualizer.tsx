@@ -6,12 +6,12 @@ import { Board } from "./Board"
 import { Algorithms } from "../types/algorithms"
 // import { Footer } from "./Footer"
 
-const DEFAULT_START_ROW = 4
-const DEFAULT_START_COL = 3
-const DEFAULT_END_ROW = 4
-const DEFAULT_END_COL = 7
-const BOARD_ROWS = 15
-const BOARD_COLS = 15
+const DEFAULT_START_ROW = 11
+const DEFAULT_START_COL = 14
+const DEFAULT_END_ROW = 11
+const DEFAULT_END_COL = 34
+const BOARD_ROWS = 25
+const BOARD_COLS = 50
 
 const PathFinderVisualizer: React.FC = () => {
   const [board, setBoard] = useState<any[any]>([[]])
