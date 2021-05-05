@@ -3,12 +3,16 @@ import { Typography, Button, MenuItem, Select } from "@material-ui/core"
 import { FormControl, InputLabel, Slider } from "@material-ui/core"
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
 import { withStyles } from "@material-ui/core/styles"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import { Div } from "../../components"
 import { colors } from "../../theme"
 import { dijkstra } from "../../algorithms"
+import { animateAlgorithm } from "../../helpers/animations/animateAlgorithm"
 import { Node } from "../../types/node"
-import { toast, ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import { algoSpeedsArray, AlgoSpeed, AlgoSpeeds } from "../../types/algorithms"
+import { preSetupAlgorithm } from "../../helpers/algorithms/preSetupAlgorithm"
+import { createBoard } from "../../helpers/board/createBoard"
 
 const algorithms = [
   "Dijkstra",
@@ -18,11 +22,15 @@ const algorithms = [
 ] as const
 type Algorithms = typeof algorithms[number] | ""
 
-const algoSpeeds = { slow: 16, normal: 8, fast: 2 }
-const algoSpeedsArray = ["slow", "normal", "fast"] as const
-type AlgoSpeed = typeof algoSpeedsArray[number]
+const algoSpeeds: AlgoSpeeds = {
+  slow: 16,
+  normal: 8,
+  fast: 2,
+}
 
 interface Props {
+  BOARD_COLS: number
+  BOARD_ROWS: number
   board: Node[][]
   DEFAULT_END_COL: number
   DEFAULT_END_ROW: number
@@ -37,6 +45,8 @@ interface Props {
 }
 
 const TopBar: React.FC<Props> = ({
+  BOARD_COLS,
+  BOARD_ROWS,
   board,
   DEFAULT_END_COL,
   DEFAULT_END_ROW,
@@ -63,59 +73,44 @@ const TopBar: React.FC<Props> = ({
   }
 
   const startVisualizer = async () => {
-    let startNode: Node | null = board?.[DEFAULT_START_ROW]?.[DEFAULT_START_COL]
-    let endNode: Node | null = board?.[DEFAULT_END_ROW]?.[DEFAULT_END_COL]
-    for (const row of board) {
-      for (const node of row) {
-        if (node.isStart) startNode = node
-        else if (node.isEnd) endNode = node
-      }
-    }
-
-    for (const row of board) {
-      for (const node of row) {
-        node.prevNode = null
-        node.isVisited = false
-        node.distance = Infinity
-        if (!node.isWall) {
-          nodeRefs.current[`${node.row}-${node.col}`].style.background =
-            colors.lightShade
-        }
-      }
-    }
-    const { visitedNodesInOrder, shortestPath } = dijkstra({
-      startNode,
-      endNode,
+    const { startNode, endNode } = preSetupAlgorithm({
       board,
+      DEFAULT_END_COL,
+      DEFAULT_END_ROW,
+      DEFAULT_START_COL,
+      DEFAULT_START_ROW,
+      nodeRefs,
     })
+    const { visitedNodesInOrder, shortestPath } = dijkstra({
+      board,
+      endNode,
+      startNode,
+    })
+
     setIsVisualizing(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
-    animateAlgorithm({ visitedNodesInOrder, shortestPath }).finally(() => {
+    animateAlgorithm({
+      visitedNodesInOrder,
+      shortestPath,
+      algoSpeeds,
+      selectedAlgoSpeed,
+      nodeRefs,
+    }).finally(() => {
       setIsVisualizing(false)
-      !hasVisualized && setHasVisualized(true)
+      if (!hasVisualized) setHasVisualized(true)
     })
   }
 
   const resetBoard = () => {
-    const nodes = []
-    for (let row = 0; row < 10; row++) {
-      const _row = []
-      for (let col = 0; col < 10; col++) {
-        const node: Node = {
-          col,
-          distance: Infinity,
-          isEnd: row === DEFAULT_END_ROW && col === DEFAULT_END_COL,
-          isStart: row === DEFAULT_START_ROW && col === DEFAULT_START_COL,
-          isVisited: false,
-          isWall: false,
-          prevNode: null,
-          row,
-        }
-        nodeRefs.current[`${row}-${col}`].style.background = colors.lightShade
-        _row.push(node)
-      }
-      nodes.push(_row)
-    }
+    const nodes = createBoard({
+      BOARD_COLS,
+      BOARD_ROWS,
+      DEFAULT_END_COL,
+      DEFAULT_END_ROW,
+      DEFAULT_START_COL,
+      DEFAULT_START_ROW,
+      nodeRefs,
+    })
     setBoard(nodes)
   }
   const clearWalls = () => {
@@ -126,57 +121,6 @@ const TopBar: React.FC<Props> = ({
           colors.lightShade
       }
     }
-  }
-
-  const animateShortestPath = ({
-    shortestPath,
-    shortestPathDelay,
-  }: {
-    shortestPath: Node[]
-    shortestPathDelay: number
-  }) => {
-    if (!shortestPath[shortestPath.length - 1].isEnd) {
-      toast.error("No such path found :(")
-      return
-    }
-    for (let j = 1; j < shortestPath.length; j++) {
-      setTimeout(() => {
-        nodeRefs.current[
-          `${shortestPath[j].row}-${shortestPath[j].col}`
-        ].style.backgroundColor = colors.lightAccent
-      }, shortestPathDelay * j)
-    }
-  }
-
-  const animateAlgorithm = async ({
-    visitedNodesInOrder,
-    shortestPath,
-  }: {
-    visitedNodesInOrder: Node[]
-    shortestPath: Node[]
-  }) => {
-    const delay = algoSpeeds[selectedAlgoSpeed]
-    const shortestPathDelay = 25
-    for (let i = 1; i < visitedNodesInOrder.length; i++) {
-      if (i === visitedNodesInOrder.length - 1) {
-        setTimeout(() => {
-          animateShortestPath({ shortestPath, shortestPathDelay })
-        }, delay * i)
-      } else {
-        setTimeout(() => {
-          nodeRefs.current[
-            `${visitedNodesInOrder[i].row}-${visitedNodesInOrder[i].col}`
-          ].style.backgroundColor = colors.darkAccent
-        }, delay * i)
-      }
-    }
-    return new Promise((resolve) => {
-      setTimeout(
-        resolve,
-        delay * visitedNodesInOrder.length +
-          shortestPath.length * shortestPathDelay
-      )
-    })
   }
 
   return (
@@ -260,7 +204,7 @@ const TopBar: React.FC<Props> = ({
           </Button>
         </Div>
       </Div>
-      <ToastContainer autoClose={10000} closeButton position="bottom-right" />
+      <ToastContainer autoClose={8000} closeButton position="bottom-right" />
     </>
   )
 }

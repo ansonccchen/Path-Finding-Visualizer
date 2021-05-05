@@ -9,6 +9,8 @@ const DEFAULT_START_ROW = 4
 const DEFAULT_START_COL = 3
 const DEFAULT_END_ROW = 4
 const DEFAULT_END_COL = 7
+const BOARD_ROWS = 10
+const BOARD_COLS = 10
 
 const PathFinderVisualizer: React.FC = () => {
   const [board, setBoard] = useState<any[any]>([[]])
@@ -19,6 +21,8 @@ const PathFinderVisualizer: React.FC = () => {
   return (
     <Div fill minHeight="100vh" minWidth={1304} overflowX="auto">
       <TopBar
+        BOARD_COLS={BOARD_COLS}
+        BOARD_ROWS={BOARD_ROWS}
         board={board}
         DEFAULT_END_COL={DEFAULT_END_COL}
         DEFAULT_END_ROW={DEFAULT_END_ROW}
@@ -33,6 +37,8 @@ const PathFinderVisualizer: React.FC = () => {
       />
       <InfoBar />
       <Board
+        BOARD_COLS={BOARD_COLS}
+        BOARD_ROWS={BOARD_ROWS}
         board={board}
         DEFAULT_END_COL={DEFAULT_END_COL}
         DEFAULT_END_ROW={DEFAULT_END_ROW}

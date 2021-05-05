@@ -5,8 +5,13 @@ import { colors } from "../../theme"
 import { Node } from "../../types/node"
 import NodeView from "./NodeView"
 import { dijkstra } from "../../algorithms"
+import { animateInstantAlgorithm } from "../../helpers/animations/animateInstantAlgorithm"
+import { preSetupAlgorithm } from "../../helpers/algorithms/preSetupAlgorithm"
+import { createBoard } from "../../helpers/board/createBoard"
 
 interface Props {
+  BOARD_COLS: number
+  BOARD_ROWS: number
   board: Node[][]
   DEFAULT_END_COL: number
   DEFAULT_END_ROW: number
@@ -19,6 +24,8 @@ interface Props {
 }
 
 const Board: React.FC<Props> = ({
+  BOARD_COLS,
+  BOARD_ROWS,
   board,
   DEFAULT_END_COL,
   DEFAULT_END_ROW,
@@ -30,32 +37,27 @@ const Board: React.FC<Props> = ({
   setBoard,
 }) => {
   useEffect(() => {
-    const nodes = []
-    for (let row = 0; row < 10; row++) {
-      const _row = []
-      for (let col = 0; col < 10; col++) {
-        const node: Node = {
-          col,
-          distance: Infinity,
-          isEnd: row === DEFAULT_END_ROW && col === DEFAULT_END_COL,
-          isStart: row === DEFAULT_START_ROW && col === DEFAULT_START_COL,
-          isVisited: false,
-          isWall: false,
-          prevNode: null,
-          row,
-        }
-        _row.push(node)
-      }
-      nodes.push(_row)
-    }
+    const nodes = createBoard({
+      BOARD_COLS,
+      BOARD_ROWS,
+      DEFAULT_END_COL,
+      DEFAULT_END_ROW,
+      DEFAULT_START_COL,
+      DEFAULT_START_ROW,
+      nodeRefs,
+    })
     setBoard(nodes)
   }, [
+    BOARD_COLS,
+    BOARD_ROWS,
     DEFAULT_END_COL,
     DEFAULT_END_ROW,
     DEFAULT_START_COL,
     DEFAULT_START_ROW,
+    nodeRefs,
     setBoard,
   ])
+
   const [isMovingStartNode, setIsMovingStartNode] = useState<boolean>(false)
   const [isMovingEndNode, setIsMovingEndNode] = useState<boolean>(false)
   const [startPosition, setStartPosition] = useState<number[]>([
@@ -69,57 +71,20 @@ const Board: React.FC<Props> = ({
 
   const redoAlgorithm = () => {
     if (isVisualizing || !hasVisualized) return
-    let startNode: Node | null = board?.[DEFAULT_START_ROW]?.[DEFAULT_START_COL]
-    let endNode: Node | null = board?.[DEFAULT_END_ROW]?.[DEFAULT_END_COL]
-    for (const row of board) {
-      for (const node of row) {
-        if (node.isStart) {
-          startNode = node
-        } else if (node.isEnd) {
-          endNode = node
-        }
-      }
-    }
-    for (const row of board) {
-      for (const node of row) {
-        node.prevNode = null
-        node.isVisited = false
-        node.distance = Infinity
-        if (!node.isWall) {
-          nodeRefs.current[`${node.row}-${node.col}`].style.background =
-            colors.lightShade
-        }
-      }
-    }
-    const { visitedNodesInOrder, shortestPath } = dijkstra({
-      startNode,
-      endNode,
+    const { startNode, endNode } = preSetupAlgorithm({
       board,
+      DEFAULT_END_COL,
+      DEFAULT_END_ROW,
+      DEFAULT_START_COL,
+      DEFAULT_START_ROW,
+      nodeRefs,
     })
-    animateInstantAlgorithm({ visitedNodesInOrder, shortestPath })
-  }
-
-  const animateInstantAlgorithm = async ({
-    visitedNodesInOrder,
-    shortestPath,
-  }: {
-    visitedNodesInOrder: Node[]
-    shortestPath: Node[]
-  }) => {
-    for (let i = 1; i < visitedNodesInOrder.length; i++) {
-      if (i === visitedNodesInOrder.length - 1) {
-        if (!shortestPath[shortestPath.length - 1].isEnd) return
-        for (let j = 1; j < shortestPath.length; j++) {
-          nodeRefs.current[
-            `${shortestPath[j].row}-${shortestPath[j].col}`
-          ].style.backgroundColor = colors.lightAccent
-        }
-      } else {
-        nodeRefs.current[
-          `${visitedNodesInOrder[i].row}-${visitedNodesInOrder[i].col}`
-        ].style.backgroundColor = colors.darkAccent
-      }
-    }
+    const { visitedNodesInOrder, shortestPath } = dijkstra({
+      board,
+      endNode,
+      startNode,
+    })
+    animateInstantAlgorithm({ visitedNodesInOrder, shortestPath, nodeRefs })
   }
 
   return (
