@@ -57,6 +57,8 @@ const animateShortestPath = ({
   nodeRefs,
 }: Params) => {
   if (!shortestPath[shortestPath.length - 1].isEnd) {
+    const { row, col } = shortestPath[shortestPath.length - 1]
+    nodeRefs.current[`${row}-${col}`].style.backgroundColor = colors.darkAccent
     toast.error("No such path found :(")
     return
   }

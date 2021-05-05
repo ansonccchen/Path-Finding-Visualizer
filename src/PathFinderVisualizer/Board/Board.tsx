@@ -18,11 +18,19 @@ interface Props {
   DEFAULT_END_ROW: number
   DEFAULT_START_COL: number
   DEFAULT_START_ROW: number
+  endPosition: number[]
   hasVisualized: boolean
   isVisualizing: boolean
   nodeRefs: any
-  setBoard: React.Dispatch<any>
   selectedAlgorithm: Algorithms
+  setBoard: React.Dispatch<any>
+  setEndPosition: React.Dispatch<React.SetStateAction<number[]>>
+  setPathDistance: React.Dispatch<React.SetStateAction<number | "" | "N/A">>
+  setStartPosition: React.Dispatch<React.SetStateAction<number[]>>
+  setUnvisitedCount: React.Dispatch<React.SetStateAction<number>>
+  setVisitedDistance: React.Dispatch<React.SetStateAction<number | "" | "N/A">>
+  setWallCount: React.Dispatch<React.SetStateAction<number>>
+  startPosition: number[]
 }
 
 const Board: React.FC<Props> = ({
@@ -33,11 +41,19 @@ const Board: React.FC<Props> = ({
   DEFAULT_END_ROW,
   DEFAULT_START_COL,
   DEFAULT_START_ROW,
+  endPosition,
   hasVisualized,
   isVisualizing,
   nodeRefs,
-  setBoard,
   selectedAlgorithm,
+  setBoard,
+  setEndPosition,
+  setPathDistance,
+  setStartPosition,
+  setUnvisitedCount,
+  setVisitedDistance,
+  setWallCount,
+  startPosition,
 }) => {
   useEffect(() => {
     const nodes = createBoard({
@@ -63,14 +79,6 @@ const Board: React.FC<Props> = ({
 
   const [isMovingStartNode, setIsMovingStartNode] = useState<boolean>(false)
   const [isMovingEndNode, setIsMovingEndNode] = useState<boolean>(false)
-  const [startPosition, setStartPosition] = useState<number[]>([
-    DEFAULT_START_ROW,
-    DEFAULT_START_COL,
-  ])
-  const [endPosition, setEndPosition] = useState<number[]>([
-    DEFAULT_END_ROW,
-    DEFAULT_END_COL,
-  ])
 
   const redoAlgorithm = useCallback(() => {
     if (isVisualizing || !hasVisualized) return
@@ -88,8 +96,16 @@ const Board: React.FC<Props> = ({
       endNode,
       startNode,
     })
+    setUnvisitedCount(BOARD_COLS * BOARD_ROWS - visitedNodesInOrder.length + 1)
+    setVisitedDistance(visitedNodesInOrder.length - 1)
+    if (shortestPath[shortestPath.length - 1].isEnd)
+      setPathDistance(shortestPath.length - 1)
+    else setPathDistance("N/A")
+
     animateInstantAlgorithm({ visitedNodesInOrder, shortestPath, nodeRefs })
   }, [
+    BOARD_COLS,
+    BOARD_ROWS,
     DEFAULT_END_COL,
     DEFAULT_END_ROW,
     DEFAULT_START_COL,
@@ -99,6 +115,9 @@ const Board: React.FC<Props> = ({
     isVisualizing,
     nodeRefs,
     selectedAlgorithm,
+    setPathDistance,
+    setUnvisitedCount,
+    setVisitedDistance,
   ])
 
   return (
@@ -130,6 +149,7 @@ const Board: React.FC<Props> = ({
                       setIsMovingEndNode={setIsMovingEndNode}
                       setIsMovingStartNode={setIsMovingStartNode}
                       setStartPosition={setStartPosition}
+                      setWallCount={setWallCount}
                       startPosition={startPosition}
                     />
                   )

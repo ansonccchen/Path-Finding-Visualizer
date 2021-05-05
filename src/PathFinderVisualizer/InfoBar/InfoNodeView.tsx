@@ -6,9 +6,10 @@ import { colors } from "../../theme"
 interface Props {
   label: string
   displayElement: any
+  caption?: any
 }
 
-const InfoNodeView: React.FC<Props> = ({ label, displayElement }) => {
+const InfoNodeView: React.FC<Props> = ({ label, displayElement, caption }) => {
   return (
     <Div alignItemsCenter>
       <Div
@@ -22,10 +23,11 @@ const InfoNodeView: React.FC<Props> = ({ label, displayElement }) => {
       >
         {displayElement}
       </Div>
-      <Div w={64} alignItemsCenter>
+      <Div w={120} alignItemsCenter>
         <Typography style={styles.text} align="center">
           {label}
         </Typography>
+        {caption}
       </Div>
     </Div>
   )
@@ -38,4 +40,4 @@ const styles = {
   },
 }
 
-export default InfoNodeView
+export default React.memo(InfoNodeView)

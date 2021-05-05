@@ -29,8 +29,11 @@ interface Params {
 }
 
 const animateShortestPath = ({ nodeRefs, shortestPath }: Params) => {
-  if (!shortestPath[shortestPath.length - 1].isEnd) return
-
+  if (!shortestPath[shortestPath.length - 1].isEnd) {
+    const { row, col } = shortestPath[shortestPath.length - 1]
+    nodeRefs.current[`${row}-${col}`].style.backgroundColor = colors.darkAccent
+    return
+  }
   for (let j = 1; j < shortestPath.length; j++) {
     nodeRefs.current[
       `${shortestPath[j].row}-${shortestPath[j].col}`

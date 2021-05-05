@@ -15,6 +15,7 @@ interface Props {
   setIsMovingEndNode: React.Dispatch<React.SetStateAction<boolean>>
   setIsMovingStartNode: React.Dispatch<React.SetStateAction<boolean>>
   setStartPosition: React.Dispatch<React.SetStateAction<number[]>>
+  setWallCount: React.Dispatch<React.SetStateAction<number>>
   startPosition?: number[]
 }
 
@@ -22,6 +23,8 @@ let prevStartNodeRef: Node | null = null
 let prevEndNodeRef: Node | null = null
 let initalNodeWallState: boolean = false
 // let previousNodeWallState: boolean = false
+
+let wallCount = 0
 
 const NodeView: React.FC<Props> = ({
   endPosition,
@@ -35,6 +38,7 @@ const NodeView: React.FC<Props> = ({
   setIsMovingEndNode,
   setIsMovingStartNode,
   setStartPosition,
+  setWallCount,
   startPosition,
 }) => {
   const handleOnMouseDown = useCallback(() => {
@@ -94,6 +98,8 @@ const NodeView: React.FC<Props> = ({
         node.isWall = false
         nodeRefs.current[`${node.row}-${node.col}`].style.backgroundColor =
           colors.lightShade
+        wallCount -= 1
+        setWallCount(wallCount)
       }
     }
 
@@ -117,6 +123,7 @@ const NodeView: React.FC<Props> = ({
     redoAlgorithm,
     setEndPosition,
     setStartPosition,
+    setWallCount,
   ])
 
   const handleOnClick = useCallback(() => {
@@ -133,8 +140,23 @@ const NodeView: React.FC<Props> = ({
       ].style.backgroundColor = node.isWall
         ? colors.darkShade
         : colors.lightShade
+
+      if (node.isWall) {
+        wallCount += 1
+        setWallCount(wallCount)
+      } else {
+        wallCount -= 1
+        setWallCount(wallCount)
+      }
     }
-  }, [node, isVisualizing, isMovingStartNode, isMovingEndNode, nodeRefs])
+  }, [
+    isMovingEndNode,
+    isMovingStartNode,
+    isVisualizing,
+    node,
+    nodeRefs,
+    setWallCount,
+  ])
 
   const handleOnMouseOver = useCallback(() => {
     if (
@@ -167,6 +189,8 @@ const NodeView: React.FC<Props> = ({
         node.isWall = true
         nodeRefs.current[`${node.row}-${node.col}`].style.backgroundColor =
           colors.darkShade
+        wallCount += 1
+        setWallCount(wallCount)
       }
     }
     if (isMovingStartNode) {

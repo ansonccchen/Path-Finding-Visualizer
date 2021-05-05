@@ -32,11 +32,14 @@ interface Props {
   hasVisualized: boolean
   isVisualizing: boolean
   nodeRefs: any
+  selectedAlgorithm: Algorithms
   setBoard: React.Dispatch<any>
   setHasVisualized: React.Dispatch<React.SetStateAction<boolean>>
   setIsVisualizing: React.Dispatch<React.SetStateAction<boolean>>
-  selectedAlgorithm: Algorithms
+  setPathDistance: React.Dispatch<React.SetStateAction<number | "" | "N/A">>
   setSelectedAlgorithm: React.Dispatch<React.SetStateAction<Algorithms>>
+  setUnvisitedCount: React.Dispatch<React.SetStateAction<number>>
+  setVisitedDistance: React.Dispatch<React.SetStateAction<number | "" | "N/A">>
 }
 
 const TopBar: React.FC<Props> = ({
@@ -50,11 +53,14 @@ const TopBar: React.FC<Props> = ({
   hasVisualized,
   isVisualizing,
   nodeRefs,
+  selectedAlgorithm,
   setBoard,
   setHasVisualized,
   setIsVisualizing,
-  selectedAlgorithm,
+  setPathDistance,
   setSelectedAlgorithm,
+  setUnvisitedCount,
+  setVisitedDistance,
 }) => {
   const classes = useStyles()
   const [selectedAlgoSpeed, setSelectedAlgoSpeed] = useState<AlgoSpeed>(
@@ -92,6 +98,15 @@ const TopBar: React.FC<Props> = ({
       nodeRefs,
     }).finally(() => {
       setIsVisualizing(false)
+
+      setUnvisitedCount(
+        BOARD_COLS * BOARD_ROWS - visitedNodesInOrder.length + 1
+      )
+      setVisitedDistance(visitedNodesInOrder.length - 1)
+      if (shortestPath[shortestPath.length - 1].isEnd)
+        setPathDistance(shortestPath.length - 1)
+      else setPathDistance("N/A")
+
       if (!hasVisualized) setHasVisualized(true)
     })
   }
@@ -251,4 +266,4 @@ const SpeedSlider = withStyles({
   },
 })(Slider)
 
-export default TopBar
+export default React.memo(TopBar)
