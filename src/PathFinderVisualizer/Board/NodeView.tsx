@@ -209,7 +209,7 @@ const NodeView: React.FC<Props> = ({
         }
       }
     }
-  }, [isMovingEndNode, isMovingStartNode, node, nodeRefs])
+  }, [isMovingEndNode, isMovingStartNode, node, nodeRefs, setWallCount])
 
   return (
     <GridNode

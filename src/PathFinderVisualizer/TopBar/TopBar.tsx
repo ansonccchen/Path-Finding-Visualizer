@@ -21,6 +21,11 @@ const algoSpeeds: AlgoSpeeds = {
   fast: 2,
 }
 
+const marks: { value: number; label: AlgoSpeed }[] = []
+for (let i = 0; i < algoSpeedsArray.length; i++) {
+  marks.push({ value: i, label: algoSpeedsArray[i] })
+}
+
 interface Props {
   BOARD_COLS: number
   BOARD_ROWS: number
@@ -66,11 +71,6 @@ const TopBar: React.FC<Props> = ({
   const [selectedAlgoSpeed, setSelectedAlgoSpeed] = useState<AlgoSpeed>(
     "normal"
   )
-
-  const marks: { value: number; label: AlgoSpeed }[] = []
-  for (let i = 0; i < algoSpeedsArray.length; i++) {
-    marks.push({ value: i, label: algoSpeedsArray[i] })
-  }
 
   const startVisualizer = async () => {
     const { startNode, endNode } = preSetupAlgorithm({
@@ -126,9 +126,11 @@ const TopBar: React.FC<Props> = ({
   const clearWalls = () => {
     for (const row of board) {
       for (const node of row) {
-        node.isWall = false
-        nodeRefs.current[`${node.row}-${node.col}`].style.background =
-          colors.lightShade
+        if (node.isWall) {
+          node.isWall = false
+          nodeRefs.current[`${node.row}-${node.col}`].style.background =
+            colors.lightShade
+        }
       }
     }
   }
