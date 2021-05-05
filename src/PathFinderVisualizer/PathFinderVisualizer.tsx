@@ -9,8 +9,8 @@ const DEFAULT_START_ROW = 4
 const DEFAULT_START_COL = 3
 const DEFAULT_END_ROW = 4
 const DEFAULT_END_COL = 7
-const BOARD_ROWS = 10
-const BOARD_COLS = 10
+const BOARD_ROWS = 25
+const BOARD_COLS = 50
 
 const PathFinderVisualizer: React.FC = () => {
   const [board, setBoard] = useState<any[any]>([[]])

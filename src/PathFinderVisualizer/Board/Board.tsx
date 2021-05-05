@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import { Grid } from "@material-ui/core"
 import { Div } from "../../components"
 import { colors } from "../../theme"
@@ -69,7 +69,7 @@ const Board: React.FC<Props> = ({
     DEFAULT_END_COL,
   ])
 
-  const redoAlgorithm = () => {
+  const redoAlgorithm = useCallback(() => {
     if (isVisualizing || !hasVisualized) return
     const { startNode, endNode } = preSetupAlgorithm({
       board,
@@ -85,7 +85,16 @@ const Board: React.FC<Props> = ({
       startNode,
     })
     animateInstantAlgorithm({ visitedNodesInOrder, shortestPath, nodeRefs })
-  }
+  }, [
+    DEFAULT_END_COL,
+    DEFAULT_END_ROW,
+    DEFAULT_START_COL,
+    DEFAULT_START_ROW,
+    board,
+    hasVisualized,
+    isVisualizing,
+    nodeRefs,
+  ])
 
   return (
     <Div

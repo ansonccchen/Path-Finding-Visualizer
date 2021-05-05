@@ -4,7 +4,7 @@ import { Node } from "../../types/node"
 import GridNode from "./GridNode"
 
 interface Props {
-  endPosition: number[]
+  endPosition?: number[]
   isMovingEndNode: boolean
   isMovingStartNode: boolean
   isVisualizing: boolean
@@ -15,7 +15,7 @@ interface Props {
   setIsMovingEndNode: React.Dispatch<React.SetStateAction<boolean>>
   setIsMovingStartNode: React.Dispatch<React.SetStateAction<boolean>>
   setStartPosition: React.Dispatch<React.SetStateAction<number[]>>
-  startPosition: number[]
+  startPosition?: number[]
 }
 
 let prevStartNodeRef: Node | null = null
@@ -95,9 +95,6 @@ const NodeView: React.FC<Props> = ({
         nodeRefs.current[`${node.row}-${node.col}`].style.backgroundColor =
           colors.lightShade
       }
-    }
-
-    if (isMovingStartNode && node.isEnd) {
     }
 
     if (isMovingStartNode && !node.isEnd) {
