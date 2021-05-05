@@ -3,20 +3,24 @@ import { Div } from "../components"
 import { TopBar } from "./TopBar"
 import { InfoBar } from "./InfoBar"
 import { Board } from "./Board"
+import { Algorithms } from "../types/algorithms"
 // import { Footer } from "./Footer"
 
 const DEFAULT_START_ROW = 4
 const DEFAULT_START_COL = 3
 const DEFAULT_END_ROW = 4
 const DEFAULT_END_COL = 7
-const BOARD_ROWS = 25
-const BOARD_COLS = 50
+const BOARD_ROWS = 10
+const BOARD_COLS = 10
 
 const PathFinderVisualizer: React.FC = () => {
   const [board, setBoard] = useState<any[any]>([[]])
   const nodeRefs = useRef({})
   const [isVisualizing, setIsVisualizing] = useState<boolean>(false)
   const [hasVisualized, setHasVisualized] = useState<boolean>(false)
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithms>(
+    "Dijkstra"
+  )
 
   return (
     <Div fill minHeight="100vh" minWidth={1304} overflowX="auto">
@@ -31,9 +35,11 @@ const PathFinderVisualizer: React.FC = () => {
         hasVisualized={hasVisualized}
         isVisualizing={isVisualizing}
         nodeRefs={nodeRefs}
+        selectedAlgorithm={selectedAlgorithm}
         setBoard={setBoard}
         setHasVisualized={setHasVisualized}
         setIsVisualizing={setIsVisualizing}
+        setSelectedAlgorithm={setSelectedAlgorithm}
       />
       <InfoBar />
       <Board
@@ -47,6 +53,7 @@ const PathFinderVisualizer: React.FC = () => {
         hasVisualized={hasVisualized}
         isVisualizing={isVisualizing}
         nodeRefs={nodeRefs}
+        selectedAlgorithm={selectedAlgorithm}
         setBoard={setBoard}
       />
       {/* <Footer /> */}

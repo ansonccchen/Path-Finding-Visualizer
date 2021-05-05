@@ -7,20 +7,13 @@ import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { Div } from "../../components"
 import { colors } from "../../theme"
-import { dijkstra } from "../../algorithms"
 import { animateAlgorithm } from "../../helpers/animations/animateAlgorithm"
 import { Node } from "../../types/node"
-import { algoSpeedsArray, AlgoSpeed, AlgoSpeeds } from "../../types/algorithms"
+import { AlgoSpeed, AlgoSpeeds, algoSpeedsArray } from "../../types/algorithms"
+import { algorithms, Algorithms } from "../../types/algorithms"
 import { preSetupAlgorithm } from "../../helpers/algorithms/preSetupAlgorithm"
 import { createBoard } from "../../helpers/board/createBoard"
-
-const algorithms = [
-  "Dijkstra",
-  // "Depth-first Search",
-  // "Breath-first Search",
-  // 'A*',
-] as const
-type Algorithms = typeof algorithms[number] | ""
+import { selectAlgorithm } from "../../helpers/algorithms/selectAlgorithm"
 
 const algoSpeeds: AlgoSpeeds = {
   slow: 16,
@@ -42,6 +35,8 @@ interface Props {
   setBoard: React.Dispatch<any>
   setHasVisualized: React.Dispatch<React.SetStateAction<boolean>>
   setIsVisualizing: React.Dispatch<React.SetStateAction<boolean>>
+  selectedAlgorithm: Algorithms
+  setSelectedAlgorithm: React.Dispatch<React.SetStateAction<Algorithms>>
 }
 
 const TopBar: React.FC<Props> = ({
@@ -58,11 +53,10 @@ const TopBar: React.FC<Props> = ({
   setBoard,
   setHasVisualized,
   setIsVisualizing,
+  selectedAlgorithm,
+  setSelectedAlgorithm,
 }) => {
   const classes = useStyles()
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithms>(
-    "Dijkstra"
-  )
   const [selectedAlgoSpeed, setSelectedAlgoSpeed] = useState<AlgoSpeed>(
     "normal"
   )
@@ -81,7 +75,8 @@ const TopBar: React.FC<Props> = ({
       DEFAULT_START_ROW,
       nodeRefs,
     })
-    const { visitedNodesInOrder, shortestPath } = dijkstra({
+    const { visitedNodesInOrder, shortestPath } = selectAlgorithm({
+      selectedAlgorithm,
       board,
       endNode,
       startNode,

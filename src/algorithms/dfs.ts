@@ -1,4 +1,3 @@
-import Heap from "heap-js"
 import { Node } from "../types/node"
 
 interface Props {
@@ -6,23 +5,16 @@ interface Props {
   endNode: Node
   startNode: Node
 }
-
-const dijkstra = ({ startNode, endNode, board }: Props) => {
-  const unvisitedNodesMinHeap = new Heap(
-    (a: Node, b: Node) => a.distance - b.distance
-  )
+const dfs = ({ board, endNode, startNode }: Props) => {
+  const stack: Node[] = []
   startNode.distance = 0
-  for (const row of board) {
-    for (const node of row) {
-      unvisitedNodesMinHeap.push(node)
-    }
-  }
+  stack.push(startNode)
 
   const visitedNodesInOrder: Node[] = []
   const shortestPath: Node[] = []
 
-  while (unvisitedNodesMinHeap.length > 0) {
-    const currNode: Node = unvisitedNodesMinHeap.pop() as Node
+  while (stack.length > 0) {
+    const currNode: Node = stack.pop() as Node
     if (currNode.isWall) continue
     if (currNode.distance === Infinity) break
     currNode.isVisited = true
@@ -32,12 +24,10 @@ const dijkstra = ({ startNode, endNode, board }: Props) => {
       node: currNode,
       board,
     })
-
     for (const neighbour of unvisitedNeighbours) {
       neighbour.distance = currNode.distance + 1
       neighbour.prevNode = currNode
-      unvisitedNodesMinHeap.remove(neighbour)
-      unvisitedNodesMinHeap.push(neighbour)
+      stack.push(neighbour)
     }
   }
 
@@ -52,11 +42,11 @@ const dijkstra = ({ startNode, endNode, board }: Props) => {
 }
 
 const getUnvisitedNeighbours = ({
-  node,
   board,
+  node,
 }: {
-  node: Node
   board: Node[][]
+  node: Node
 }) => {
   const neighbours: Node[] = []
   const { row, col } = node
@@ -67,4 +57,4 @@ const getUnvisitedNeighbours = ({
   return neighbours.filter((neighbour) => !neighbour.isVisited)
 }
 
-export default dijkstra
+export default dfs

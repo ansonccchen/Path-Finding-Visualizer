@@ -4,10 +4,11 @@ import { Div } from "../../components"
 import { colors } from "../../theme"
 import { Node } from "../../types/node"
 import NodeView from "./NodeView"
-import { dijkstra } from "../../algorithms"
 import { animateInstantAlgorithm } from "../../helpers/animations/animateInstantAlgorithm"
 import { preSetupAlgorithm } from "../../helpers/algorithms/preSetupAlgorithm"
 import { createBoard } from "../../helpers/board/createBoard"
+import { Algorithms } from "../../types/algorithms"
+import { selectAlgorithm } from "../../helpers/algorithms/selectAlgorithm"
 
 interface Props {
   BOARD_COLS: number
@@ -21,6 +22,7 @@ interface Props {
   isVisualizing: boolean
   nodeRefs: any
   setBoard: React.Dispatch<any>
+  selectedAlgorithm: Algorithms
 }
 
 const Board: React.FC<Props> = ({
@@ -35,6 +37,7 @@ const Board: React.FC<Props> = ({
   isVisualizing,
   nodeRefs,
   setBoard,
+  selectedAlgorithm,
 }) => {
   useEffect(() => {
     const nodes = createBoard({
@@ -79,7 +82,8 @@ const Board: React.FC<Props> = ({
       DEFAULT_START_ROW,
       nodeRefs,
     })
-    const { visitedNodesInOrder, shortestPath } = dijkstra({
+    const { visitedNodesInOrder, shortestPath } = selectAlgorithm({
+      selectedAlgorithm,
       board,
       endNode,
       startNode,
@@ -94,6 +98,7 @@ const Board: React.FC<Props> = ({
     hasVisualized,
     isVisualizing,
     nodeRefs,
+    selectedAlgorithm,
   ])
 
   return (
