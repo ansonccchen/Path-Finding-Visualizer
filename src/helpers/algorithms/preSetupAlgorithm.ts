@@ -34,6 +34,9 @@ export const preSetupAlgorithm = ({
       node.prevNode = null
       node.isVisited = false
       node.distance = Infinity
+      node.fDistance = Infinity
+      node.gDistance = Infinity
+      node.hDistance = Infinity
       if (!node.isWall) {
         nodeRefs.current[`${node.row}-${node.col}`].style.background =
           colors.lightShade

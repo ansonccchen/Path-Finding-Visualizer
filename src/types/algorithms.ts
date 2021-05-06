@@ -10,6 +10,6 @@ export const algorithms = [
   "Dijkstra",
   "Depth-first Search",
   "Breadth-first Search",
-  // 'A*',
+  "A*",
 ] as const
 export type Algorithms = typeof algorithms[number] | ""

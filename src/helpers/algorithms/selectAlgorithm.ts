@@ -1,6 +1,6 @@
 import { Algorithms } from "../../types/algorithms"
 import { Node } from "../../types/node"
-import { dijkstra, dfs, bfs } from "../../algorithms"
+import { dijkstra, dfs, bfs, aStar } from "../../algorithms"
 
 interface Props {
   selectedAlgorithm: Algorithms
@@ -25,8 +25,8 @@ export const selectAlgorithm = ({
       return dfs({ board, endNode, startNode })
     case "Breadth-first Search":
       return bfs({ board, endNode, startNode })
-    // case "A*":
-    //   return AStar({ board, endNode, startNode })
+    case "A*":
+      return aStar({ board, endNode, startNode })
     default:
       return { visitedNodesInOrder, shortestPath }
   }

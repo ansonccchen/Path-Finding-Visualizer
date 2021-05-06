@@ -1,4 +1,5 @@
 import { Node } from "../types/node"
+import { getUnvisitedNeighbours } from "./dijkstra"
 
 interface Props {
   board: Node[][]
@@ -15,11 +16,15 @@ const dfs = ({ board, endNode, startNode }: Props) => {
 
   while (stack.length > 0) {
     const currNode: Node = stack.pop() as Node
+
     if (currNode.isWall) continue
     if (currNode.distance === Infinity) break
+
     currNode.isVisited = true
     visitedNodesInOrder.push(currNode)
+
     if (currNode === endNode) break
+
     const unvisitedNeighbours = getUnvisitedNeighbours({
       node: currNode,
       board,
@@ -39,22 +44,6 @@ const dfs = ({ board, endNode, startNode }: Props) => {
   }
 
   return { visitedNodesInOrder, shortestPath }
-}
-
-const getUnvisitedNeighbours = ({
-  board,
-  node,
-}: {
-  board: Node[][]
-  node: Node
-}) => {
-  const neighbours: Node[] = []
-  const { row, col } = node
-  if (row > 0) neighbours.push(board[row - 1][col])
-  if (row < board.length - 1) neighbours.push(board[row + 1][col])
-  if (col > 0) neighbours.push(board[row][col - 1])
-  if (col < board[0].length - 1) neighbours.push(board[row][col + 1])
-  return neighbours.filter((neighbour) => !neighbour.isVisited)
 }
 
 export default dfs

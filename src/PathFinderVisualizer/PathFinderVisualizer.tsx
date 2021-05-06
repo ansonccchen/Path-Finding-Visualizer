@@ -13,6 +13,14 @@ const DEFAULT_END_COL = 34
 const BOARD_ROWS = 25
 const BOARD_COLS = 50
 
+/* board for testing */
+// const DEFAULT_START_ROW = 3
+// const DEFAULT_START_COL = 2
+// const DEFAULT_END_ROW = 3
+// const DEFAULT_END_COL = 6
+// const BOARD_ROWS = 10
+// const BOARD_COLS = 10
+
 const PathFinderVisualizer: React.FC = () => {
   const [board, setBoard] = useState<any[any]>([[]])
   const nodeRefs = useRef({})

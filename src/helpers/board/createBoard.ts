@@ -27,6 +27,9 @@ export const createBoard = ({
       const node: Node = {
         col,
         distance: Infinity,
+        fDistance: Infinity,
+        gDistance: Infinity,
+        hDistance: Infinity,
         isEnd: row === DEFAULT_END_ROW && col === DEFAULT_END_COL,
         isStart: row === DEFAULT_START_ROW && col === DEFAULT_START_COL,
         isVisited: false,

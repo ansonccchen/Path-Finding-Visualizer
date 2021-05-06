@@ -121,6 +121,7 @@ const TopBar: React.FC<Props> = ({
       DEFAULT_START_ROW,
       nodeRefs,
     })
+    setHasVisualized(false)
     setBoard(nodes)
   }
   const clearWalls = () => {
