@@ -39,12 +39,15 @@ interface Props {
   nodeRefs: any
   selectedAlgorithm: Algorithms
   setBoard: React.Dispatch<any>
+  setEndPosition: React.Dispatch<React.SetStateAction<number[]>>
   setHasVisualized: React.Dispatch<React.SetStateAction<boolean>>
   setIsVisualizing: React.Dispatch<React.SetStateAction<boolean>>
   setPathDistance: React.Dispatch<React.SetStateAction<number | "" | "N/A">>
   setSelectedAlgorithm: React.Dispatch<React.SetStateAction<Algorithms>>
+  setStartPosition: React.Dispatch<React.SetStateAction<number[]>>
   setUnvisitedCount: React.Dispatch<React.SetStateAction<number>>
   setVisitedDistance: React.Dispatch<React.SetStateAction<number | "" | "N/A">>
+  setWallCount: React.Dispatch<React.SetStateAction<number>>
 }
 
 const TopBar: React.FC<Props> = ({
@@ -60,12 +63,15 @@ const TopBar: React.FC<Props> = ({
   nodeRefs,
   selectedAlgorithm,
   setBoard,
+  setEndPosition,
   setHasVisualized,
   setIsVisualizing,
   setPathDistance,
   setSelectedAlgorithm,
+  setStartPosition,
   setUnvisitedCount,
   setVisitedDistance,
+  setWallCount,
 }) => {
   const classes = useStyles()
   const [selectedAlgoSpeed, setSelectedAlgoSpeed] = useState<AlgoSpeed>(
@@ -121,6 +127,12 @@ const TopBar: React.FC<Props> = ({
       DEFAULT_START_ROW,
       nodeRefs,
     })
+    setStartPosition([DEFAULT_START_ROW, DEFAULT_START_COL])
+    setEndPosition([DEFAULT_END_ROW, DEFAULT_END_COL])
+    setWallCount(0)
+    setUnvisitedCount(BOARD_COLS * BOARD_ROWS)
+    setVisitedDistance("")
+    setPathDistance("")
     setHasVisualized(false)
     setBoard(nodes)
   }

@@ -62,12 +62,15 @@ const PathFinderVisualizer: React.FC = () => {
         nodeRefs={nodeRefs}
         selectedAlgorithm={selectedAlgorithm}
         setBoard={setBoard}
+        setEndPosition={setEndPosition}
         setHasVisualized={setHasVisualized}
         setIsVisualizing={setIsVisualizing}
         setPathDistance={setPathDistance}
         setSelectedAlgorithm={setSelectedAlgorithm}
+        setStartPosition={setStartPosition}
         setUnvisitedCount={setUnvisitedCount}
         setVisitedDistance={setVisitedDistance}
+        setWallCount={setWallCount}
       />
       <InfoBar
         endPosition={endPosition}
