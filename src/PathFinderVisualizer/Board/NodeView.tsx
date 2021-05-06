@@ -135,6 +135,10 @@ const NodeView: React.FC<Props> = ({
       !node.isStart
     ) {
       node.isWall = !node.isWall
+      nodeRefs.current[`${node.row}-${node.col}`].classList.remove(
+        "node-shortest-path",
+        "node-visited"
+      )
       nodeRefs.current[
         `${node.row}-${node.col}`
       ].style.backgroundColor = node.isWall

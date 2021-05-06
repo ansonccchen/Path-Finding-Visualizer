@@ -41,6 +41,10 @@ export const preSetupAlgorithm = ({
         nodeRefs.current[`${node.row}-${node.col}`].style.background =
           colors.lightShade
       }
+      nodeRefs.current[`${node.row}-${node.col}`].classList.remove(
+        "node-shortest-path",
+        "node-visited"
+      )
     }
   }
   return { startNode, endNode }

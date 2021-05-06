@@ -16,8 +16,8 @@ import { createBoard } from "../../helpers/board/createBoard"
 import { selectAlgorithm } from "../../helpers/algorithms/selectAlgorithm"
 
 const algoSpeeds: AlgoSpeeds = {
-  slow: 16,
-  normal: 8,
+  slow: 24,
+  normal: 12,
   fast: 2,
 }
 
@@ -166,6 +166,7 @@ const TopBar: React.FC<Props> = ({
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel>Select Algorithm</InputLabel>
               <Select
+                disabled={isVisualizing}
                 value={selectedAlgorithm}
                 onChange={(e) =>
                   setSelectedAlgorithm(
@@ -190,6 +191,7 @@ const TopBar: React.FC<Props> = ({
               Algorithm Speed:
             </Typography>
             <SpeedSlider
+              disabled={isVisualizing}
               defaultValue={1}
               valueLabelFormat={(e, value) =>
                 marks.findIndex((mark) => mark.value === value) + 1
@@ -205,7 +207,9 @@ const TopBar: React.FC<Props> = ({
           <Div w={32} />
           <Button onClick={startVisualizer} disabled={isVisualizing}>
             <Div
-              backgroundColor={isVisualizing ? "#9e9e9e" : colors.darkAccent}
+              backgroundColor={
+                isVisualizing ? colors.disabled : colors.darkAccent
+              }
               pv={8}
               ph={16}
               borderRadius={4}
@@ -217,13 +221,25 @@ const TopBar: React.FC<Props> = ({
           </Button>
           <Div w={32} />
           <Button onClick={resetBoard} disabled={isVisualizing}>
-            <Typography variant="h6" style={styles.text}>
+            <Typography
+              variant="h6"
+              style={{
+                color: isVisualizing ? colors.disabled : colors.main,
+                fontWeight: 500,
+              }}
+            >
               Reset Board
             </Typography>
           </Button>
           <Div w={32} />
           <Button onClick={clearWalls} disabled={isVisualizing}>
-            <Typography variant="h6" style={styles.text}>
+            <Typography
+              variant="h6"
+              style={{
+                color: isVisualizing ? colors.disabled : colors.main,
+                fontWeight: 500,
+              }}
+            >
               Clear Walls
             </Typography>
           </Button>
@@ -238,10 +254,6 @@ const styles = {
   title: {
     color: colors.main,
     fontWeight: 600,
-  },
-  text: {
-    fontWeight: 500,
-    color: colors.main,
   },
   buttonText: { fontWeight: 500, color: colors.lightShade },
 }

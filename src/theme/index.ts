@@ -4,4 +4,5 @@ export const colors = {
   lightAccent: "#97A9EC",
   lightShade: "#F5F5F1",
   main: "#576DCC",
+  disabled: "#9e9e9e",
 }

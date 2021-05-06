@@ -39,6 +39,10 @@ export const createBoard = ({
       }
       if (nodeRefs.current[`${row}-${col}`]) {
         nodeRefs.current[`${row}-${col}`].style.background = colors.lightShade
+        nodeRefs.current[`${node.row}-${node.col}`].classList.remove(
+          "node-shortest-path",
+          "node-visited"
+        )
       }
       _row.push(node)
     }

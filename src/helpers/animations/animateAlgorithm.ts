@@ -1,8 +1,8 @@
 import { toast } from "react-toastify"
-import { colors } from "../../theme"
 import { Node } from "../../types/node"
 
 import { AlgoSpeed, AlgoSpeeds } from "../../types/algorithms"
+import "./animations.css"
 
 interface Props {
   algoSpeeds: AlgoSpeeds
@@ -20,7 +20,7 @@ export const animateAlgorithm = async ({
   visitedNodesInOrder,
 }: Props) => {
   const delay = algoSpeeds[selectedAlgoSpeed]
-  const shortestPathDelay = 25
+  const shortestPathDelay = 24
 
   for (let i = 1; i < visitedNodesInOrder.length; i++) {
     if (i === visitedNodesInOrder.length - 1) {
@@ -31,7 +31,7 @@ export const animateAlgorithm = async ({
       setTimeout(() => {
         nodeRefs.current[
           `${visitedNodesInOrder[i].row}-${visitedNodesInOrder[i].col}`
-        ].style.backgroundColor = colors.darkAccent
+        ].classList.add("node-visited")
       }, delay * i)
     }
   }
@@ -40,7 +40,8 @@ export const animateAlgorithm = async ({
     setTimeout(
       resolve,
       delay * visitedNodesInOrder.length +
-        shortestPath.length * shortestPathDelay
+        shortestPath.length * shortestPathDelay +
+        1525
     )
   })
 }
@@ -58,7 +59,7 @@ const animateShortestPath = ({
 }: Params) => {
   if (!shortestPath[shortestPath.length - 1].isEnd) {
     const { row, col } = shortestPath[shortestPath.length - 1]
-    nodeRefs.current[`${row}-${col}`].style.backgroundColor = colors.darkAccent
+    nodeRefs.current[`${row}-${col}`].classList.add("node-visited")
     toast.error("No such path found :(")
     return
   }
@@ -66,7 +67,7 @@ const animateShortestPath = ({
     setTimeout(() => {
       nodeRefs.current[
         `${shortestPath[j].row}-${shortestPath[j].col}`
-      ].style.backgroundColor = colors.lightAccent
+      ].classList.add("node-shortest-path")
     }, shortestPathDelay * j)
   }
 }
