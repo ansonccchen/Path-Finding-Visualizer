@@ -6,7 +6,7 @@ import "./animations.css"
 
 interface Props {
   algoSpeeds: AlgoSpeeds
-  nodeRefs: any
+  nodeRefs: React.MutableRefObject<{ [name: string]: any }>
   selectedAlgoSpeed: AlgoSpeed
   shortestPath: Node[]
   visitedNodesInOrder: Node[]
@@ -49,7 +49,7 @@ export const animateAlgorithm = async ({
 interface Params {
   shortestPath: Node[]
   shortestPathDelay: number
-  nodeRefs: any
+  nodeRefs: React.MutableRefObject<{ [name: string]: any }>
 }
 
 const animateShortestPath = ({

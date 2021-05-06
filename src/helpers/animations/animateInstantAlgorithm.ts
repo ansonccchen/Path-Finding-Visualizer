@@ -2,7 +2,7 @@ import { colors } from "../../theme"
 import { Node } from "../../types/node"
 
 interface Props {
-  nodeRefs: any
+  nodeRefs: React.MutableRefObject<{ [name: string]: any }>
   shortestPath: Node[]
   visitedNodesInOrder: Node[]
 }
@@ -24,7 +24,7 @@ export const animateInstantAlgorithm = async ({
 }
 
 interface Params {
-  nodeRefs: any
+  nodeRefs: React.MutableRefObject<{ [name: string]: any }>
   shortestPath: Node[]
 }
 

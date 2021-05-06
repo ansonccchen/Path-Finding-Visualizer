@@ -21,7 +21,7 @@ interface Props {
   endPosition: number[]
   hasVisualized: boolean
   isVisualizing: boolean
-  nodeRefs: any
+  nodeRefs: React.MutableRefObject<{ [name: string]: any }>
   selectedAlgorithm: Algorithms
   setBoard: React.Dispatch<any>
   setEndPosition: React.Dispatch<React.SetStateAction<number[]>>
@@ -29,8 +29,8 @@ interface Props {
   setStartPosition: React.Dispatch<React.SetStateAction<number[]>>
   setUnvisitedCount: React.Dispatch<React.SetStateAction<number>>
   setVisitedDistance: React.Dispatch<React.SetStateAction<number | "" | "N/A">>
-  setWallCount: React.Dispatch<React.SetStateAction<number>>
   startPosition: number[]
+  wallCountRef: React.MutableRefObject<{ [name: string]: any } | null>
 }
 
 const Board: React.FC<Props> = ({
@@ -52,8 +52,8 @@ const Board: React.FC<Props> = ({
   setStartPosition,
   setUnvisitedCount,
   setVisitedDistance,
-  setWallCount,
   startPosition,
+  wallCountRef,
 }) => {
   useEffect(() => {
     const nodes = createBoard({
@@ -149,8 +149,8 @@ const Board: React.FC<Props> = ({
                       setIsMovingEndNode={setIsMovingEndNode}
                       setIsMovingStartNode={setIsMovingStartNode}
                       setStartPosition={setStartPosition}
-                      setWallCount={setWallCount}
                       startPosition={startPosition}
+                      wallCountRef={wallCountRef}
                     />
                   )
                 })}

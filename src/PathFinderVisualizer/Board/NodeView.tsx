@@ -9,22 +9,20 @@ interface Props {
   isMovingStartNode: boolean
   isVisualizing: boolean
   node: Node
-  nodeRefs: any
+  nodeRefs: React.MutableRefObject<{ [name: string]: any }>
   redoAlgorithm: () => void
   setEndPosition: React.Dispatch<React.SetStateAction<number[]>>
   setIsMovingEndNode: React.Dispatch<React.SetStateAction<boolean>>
   setIsMovingStartNode: React.Dispatch<React.SetStateAction<boolean>>
   setStartPosition: React.Dispatch<React.SetStateAction<number[]>>
-  setWallCount: React.Dispatch<React.SetStateAction<number>>
   startPosition?: number[]
+  wallCountRef: React.MutableRefObject<{ [name: string]: any } | null>
 }
 
 let prevStartNodeRef: Node | null = null
 let prevEndNodeRef: Node | null = null
 let initalNodeWallState: boolean = false
 // let previousNodeWallState: boolean = false
-
-let wallCount = 0
 
 const NodeView: React.FC<Props> = ({
   endPosition,
@@ -38,8 +36,8 @@ const NodeView: React.FC<Props> = ({
   setIsMovingEndNode,
   setIsMovingStartNode,
   setStartPosition,
-  setWallCount,
   startPosition,
+  wallCountRef,
 }) => {
   const handleOnMouseDown = useCallback(() => {
     if (isVisualizing) return
@@ -98,8 +96,11 @@ const NodeView: React.FC<Props> = ({
         node.isWall = false
         nodeRefs.current[`${node.row}-${node.col}`].style.backgroundColor =
           colors.lightShade
-        wallCount -= 1
-        setWallCount(wallCount)
+        if (wallCountRef.current) {
+          wallCountRef.current.count -= 1
+          wallCountRef.current.innerHTML =
+            "Count: " + (wallCountRef.current.count ?? 0)
+        }
       }
     }
 
@@ -123,7 +124,7 @@ const NodeView: React.FC<Props> = ({
     redoAlgorithm,
     setEndPosition,
     setStartPosition,
-    setWallCount,
+    wallCountRef,
   ])
 
   const handleOnClick = useCallback(() => {
@@ -145,12 +146,12 @@ const NodeView: React.FC<Props> = ({
         ? colors.darkShade
         : colors.lightShade
 
-      if (node.isWall) {
-        wallCount += 1
-        setWallCount(wallCount)
-      } else {
-        wallCount -= 1
-        setWallCount(wallCount)
+      if (wallCountRef.current) {
+        if (node.isWall) wallCountRef.current.count += 1
+        else wallCountRef.current.count -= 1
+
+        wallCountRef.current.innerHTML =
+          "Count: " + (wallCountRef.current.count ?? 0)
       }
     }
   }, [
@@ -159,7 +160,7 @@ const NodeView: React.FC<Props> = ({
     isVisualizing,
     node,
     nodeRefs,
-    setWallCount,
+    wallCountRef,
   ])
 
   const handleOnMouseOver = useCallback(() => {
@@ -193,8 +194,11 @@ const NodeView: React.FC<Props> = ({
         node.isWall = true
         nodeRefs.current[`${node.row}-${node.col}`].style.backgroundColor =
           colors.darkShade
-        wallCount += 1
-        setWallCount(wallCount)
+        if (wallCountRef.current) {
+          wallCountRef.current.count += 1
+          wallCountRef.current.innerHTML =
+            "Count: " + (wallCountRef.current.count ?? 0)
+        }
       }
     }
     if (isMovingStartNode) {
@@ -213,7 +217,7 @@ const NodeView: React.FC<Props> = ({
         }
       }
     }
-  }, [isMovingEndNode, isMovingStartNode, node, nodeRefs, setWallCount])
+  }, [isMovingEndNode, isMovingStartNode, node, nodeRefs, wallCountRef])
 
   return (
     <GridNode

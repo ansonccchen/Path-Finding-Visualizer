@@ -10,7 +10,7 @@ interface Props {
   isEnd: boolean
   isStart: boolean
   isWall: boolean
-  nodeRefs: any
+  nodeRefs: React.MutableRefObject<{ [name: string]: any }>
   onClick?: () => void
   onMouseLeave?: () => void
   onMouseOver?: () => void

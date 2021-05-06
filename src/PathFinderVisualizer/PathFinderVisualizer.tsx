@@ -24,8 +24,11 @@ const BOARD_COLS = 50
 const PathFinderVisualizer: React.FC = () => {
   const [board, setBoard] = useState<any[any]>([[]])
   const nodeRefs = useRef({})
+  const wallCountRef = useRef({})
+
   const [isVisualizing, setIsVisualizing] = useState<boolean>(false)
   const [hasVisualized, setHasVisualized] = useState<boolean>(false)
+
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithms>(
     "Dijkstra"
   )
@@ -70,7 +73,7 @@ const PathFinderVisualizer: React.FC = () => {
         setStartPosition={setStartPosition}
         setUnvisitedCount={setUnvisitedCount}
         setVisitedDistance={setVisitedDistance}
-        setWallCount={setWallCount}
+        wallCountRef={wallCountRef}
       />
       <InfoBar
         endPosition={endPosition}
@@ -78,7 +81,7 @@ const PathFinderVisualizer: React.FC = () => {
         startPosition={startPosition}
         unvisitedCount={unvisitedCount}
         visitedDistance={visitedDistance}
-        wallCount={wallCount}
+        wallCountRef={wallCountRef}
       />
       <Board
         BOARD_COLS={BOARD_COLS}
@@ -99,8 +102,8 @@ const PathFinderVisualizer: React.FC = () => {
         setStartPosition={setStartPosition}
         setUnvisitedCount={setUnvisitedCount}
         setVisitedDistance={setVisitedDistance}
-        setWallCount={setWallCount}
         startPosition={startPosition}
+        wallCountRef={wallCountRef}
       />
       {/* <Footer /> */}
     </Div>

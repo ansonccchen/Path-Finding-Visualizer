@@ -37,7 +37,7 @@ interface Props {
   DEFAULT_START_ROW: number
   hasVisualized: boolean
   isVisualizing: boolean
-  nodeRefs: any
+  nodeRefs: React.MutableRefObject<{ [name: string]: any }>
   selectedAlgorithm: Algorithms
   setBoard: React.Dispatch<any>
   setEndPosition: React.Dispatch<React.SetStateAction<number[]>>
@@ -48,7 +48,7 @@ interface Props {
   setStartPosition: React.Dispatch<React.SetStateAction<number[]>>
   setUnvisitedCount: React.Dispatch<React.SetStateAction<number>>
   setVisitedDistance: React.Dispatch<React.SetStateAction<number | "" | "N/A">>
-  setWallCount: React.Dispatch<React.SetStateAction<number>>
+  wallCountRef: React.MutableRefObject<{ [name: string]: any } | null>
 }
 
 const TopBar: React.FC<Props> = ({
@@ -72,7 +72,7 @@ const TopBar: React.FC<Props> = ({
   setStartPosition,
   setUnvisitedCount,
   setVisitedDistance,
-  setWallCount,
+  wallCountRef,
 }) => {
   const classes = useStyles()
   const [selectedAlgoSpeed, setSelectedAlgoSpeed] = useState<AlgoSpeed>(
@@ -130,7 +130,10 @@ const TopBar: React.FC<Props> = ({
     })
     setStartPosition([DEFAULT_START_ROW, DEFAULT_START_COL])
     setEndPosition([DEFAULT_END_ROW, DEFAULT_END_COL])
-    setWallCount(0)
+    if (wallCountRef.current) {
+      wallCountRef.current.count = 0
+      wallCountRef.current.innerHTML = "Count: 0"
+    }
     setUnvisitedCount(BOARD_COLS * BOARD_ROWS)
     setVisitedDistance("")
     setPathDistance("")
@@ -146,6 +149,10 @@ const TopBar: React.FC<Props> = ({
             colors.lightShade
         }
       }
+    }
+    if (wallCountRef.current) {
+      wallCountRef.current.count = 0
+      wallCountRef.current.innerHTML = "Count: 0"
     }
   }
 

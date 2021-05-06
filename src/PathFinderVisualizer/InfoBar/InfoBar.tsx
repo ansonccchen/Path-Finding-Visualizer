@@ -13,7 +13,7 @@ interface Props {
   startPosition: number[]
   unvisitedCount: number
   visitedDistance: number | "" | "N/A"
-  wallCount: number
+  wallCountRef: React.MutableRefObject<{ [name: string]: any } | null>
 }
 
 const InfoBar: React.FC<Props> = ({
@@ -22,7 +22,7 @@ const InfoBar: React.FC<Props> = ({
   startPosition,
   unvisitedCount,
   visitedDistance,
-  wallCount,
+  wallCountRef,
 }) => {
   return (
     <Div
@@ -87,8 +87,20 @@ const InfoBar: React.FC<Props> = ({
             <Div w={40} h={40} backgroundColor={colors.darkShade} />
           }
           caption={
-            <Typography style={{ color: colors.lightShade }} variant="body2">
-              Count: {wallCount}
+            <Typography
+              ref={(r) => {
+                if (
+                  wallCountRef.current &&
+                  Object.keys(wallCountRef.current).length === 0
+                ) {
+                  wallCountRef.current = r
+                  if (wallCountRef.current) wallCountRef.current.count = 0
+                }
+              }}
+              style={{ color: colors.lightShade }}
+              variant="body2"
+            >
+              Count: {wallCountRef.current?.count ?? 0}
             </Typography>
           }
         />

@@ -7,7 +7,7 @@ interface Props {
   DEFAULT_END_ROW: number
   DEFAULT_START_COL: number
   DEFAULT_START_ROW: number
-  nodeRefs: any
+  nodeRefs: React.MutableRefObject<{ [name: string]: any }>
 }
 
 export const preSetupAlgorithm = ({
