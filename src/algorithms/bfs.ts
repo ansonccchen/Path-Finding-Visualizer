@@ -26,6 +26,7 @@ const bfs = ({ board, endNode, startNode }: Props) => {
       board,
     })
     for (const neighbour of unvisitedNeighbours) {
+      neighbour.isVisited = true
       neighbour.distance = currNode.distance + 1
       neighbour.prevNode = currNode
       queue.push(neighbour)
