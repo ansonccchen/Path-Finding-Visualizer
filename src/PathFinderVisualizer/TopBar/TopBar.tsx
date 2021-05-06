@@ -14,6 +14,7 @@ import { algorithms, Algorithms } from "../../types/algorithms"
 import { preSetupAlgorithm } from "../../helpers/algorithms/preSetupAlgorithm"
 import { createBoard } from "../../helpers/board/createBoard"
 import { selectAlgorithm } from "../../helpers/algorithms/selectAlgorithm"
+import { iconPath } from "../../images"
 
 const algoSpeeds: AlgoSpeeds = {
   slow: 24,
@@ -158,6 +159,12 @@ const TopBar: React.FC<Props> = ({
         justifyContentCenter
       >
         <Div maxWidth={1704} row alignItemsCenter fill>
+          <img
+            src={iconPath}
+            alt="path"
+            style={{ objectFit: "contain", width: 56, height: 56 }}
+          />
+          <Div w={16} />
           <Typography variant="h5" style={styles.title}>
             Path Visualizer
           </Typography>
