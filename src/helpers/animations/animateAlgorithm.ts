@@ -21,18 +21,21 @@ export const animateAlgorithm = async ({
 }: Props) => {
   const delay = algoSpeeds[selectedAlgoSpeed]
   const shortestPathDelay = 24
-
-  for (let i = 1; i < visitedNodesInOrder.length; i++) {
-    if (i === visitedNodesInOrder.length - 1) {
-      setTimeout(() => {
-        animateShortestPath({ shortestPath, shortestPathDelay, nodeRefs })
-      }, delay * i)
-    } else {
-      setTimeout(() => {
-        nodeRefs.current[
-          `${visitedNodesInOrder[i].row}-${visitedNodesInOrder[i].col}`
-        ].classList.add("node-visited")
-      }, delay * i)
+  if (visitedNodesInOrder.length <= 1) {
+    toast.error("No such path found :(")
+  } else {
+    for (let i = 1; i < visitedNodesInOrder.length; i++) {
+      if (i === visitedNodesInOrder.length - 1) {
+        setTimeout(() => {
+          animateShortestPath({ shortestPath, shortestPathDelay, nodeRefs })
+        }, delay * i)
+      } else {
+        setTimeout(() => {
+          nodeRefs.current[
+            `${visitedNodesInOrder[i].row}-${visitedNodesInOrder[i].col}`
+          ].classList.add("node-visited")
+        }, delay * i)
+      }
     }
   }
 
