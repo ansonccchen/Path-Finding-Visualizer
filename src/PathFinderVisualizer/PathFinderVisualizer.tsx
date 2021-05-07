@@ -53,7 +53,7 @@ const PathFinderVisualizer: React.FC = () => {
   const [pathDistance, setPathDistance] = useState<number | "" | "N/A">("")
 
   return (
-    <Div fill minHeight="100vh" minWidth={1352} overflowX="auto">
+    <Div fill minHeight="100vh" minWidth={1464} overflowX="auto">
       <TopBar
         BOARD_COLS={BOARD_COLS}
         BOARD_ROWS={BOARD_ROWS}

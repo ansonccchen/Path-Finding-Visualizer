@@ -15,13 +15,13 @@ const LogoView: React.FC = () => {
         style={{ objectFit: "contain", width: 56, height: 56 }}
       />
       <Div w={16} />
-      <Div>
+      <Div minWidth={176}>
         <Typography variant="h5" style={styles.title}>
           Path Visualizer
         </Typography>
         <Div alignItemsCenter row>
           <Typography variant="caption" style={{ color: colors.darkShade }}>
-            Created by Anson Chen
+            by Anson Chen
           </Typography>
           <Div w={2} />
           <IconButton

@@ -119,7 +119,7 @@ const TopBar: React.FC<Props> = ({
     >
       <Div maxWidth={1704} row alignItemsCenter fill>
         <LogoView />
-        <Div w={32} />
+        <Div w={8} />
         <VisualizationOptions
           isVisualizing={isVisualizing}
           selectedAlgorithm={selectedAlgorithm}
@@ -141,7 +141,7 @@ const TopBar: React.FC<Props> = ({
             </Typography>
           </Div>
         </Button>
-        <Div w={32} />
+        <Div w={8} />
         <ClearButtons
           BOARD_COLS={BOARD_COLS}
           BOARD_ROWS={BOARD_ROWS}

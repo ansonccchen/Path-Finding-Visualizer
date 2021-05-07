@@ -53,7 +53,9 @@ const VisualizationOptions: React.FC<Props> = ({
       </Div>
       <Div w={32} />
       <Div w={200}>
-        <Typography style={{ color: colors.main }}>Algorithm Speed:</Typography>
+        <Typography style={{ color: colors.main }}>
+          Visualization Speed:
+        </Typography>
         <SpeedSlider
           disabled={isVisualizing}
           defaultValue={1}

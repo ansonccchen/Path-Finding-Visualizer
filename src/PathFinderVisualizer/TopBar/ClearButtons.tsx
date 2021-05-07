@@ -66,6 +66,7 @@ const ClearButtons: React.FC<Props> = ({
     setHasVisualized(false)
     setBoard(nodes)
   }
+
   const clearWalls = () => {
     for (const row of board) {
       for (const node of row) {
@@ -82,6 +83,26 @@ const ClearButtons: React.FC<Props> = ({
     }
   }
 
+  const clearPath = () => {
+    for (const row of board) {
+      for (const node of row) {
+        if (node.isVisited) {
+          node.isVisited = false
+          nodeRefs.current[`${node.row}-${node.col}`].classList.remove(
+            "node-shortest-path",
+            "node-visited"
+          )
+          nodeRefs.current[`${node.row}-${node.col}`].style.background =
+            colors.lightShade
+        }
+      }
+    }
+    setUnvisitedCount(BOARD_COLS * BOARD_ROWS)
+    setVisitedDistance("")
+    setPathDistance("")
+    setHasVisualized(false)
+  }
+
   return (
     <>
       <Button onClick={resetBoard} disabled={isVisualizing}>
@@ -95,7 +116,7 @@ const ClearButtons: React.FC<Props> = ({
           Reset Board
         </Typography>
       </Button>
-      <Div w={32} />
+      <Div w={8} />
       <Button onClick={clearWalls} disabled={isVisualizing}>
         <Typography
           variant="h6"
@@ -105,6 +126,18 @@ const ClearButtons: React.FC<Props> = ({
           }}
         >
           Clear Walls
+        </Typography>
+      </Button>
+      <Div w={8} />
+      <Button onClick={clearPath} disabled={isVisualizing}>
+        <Typography
+          variant="h6"
+          style={{
+            color: isVisualizing ? colors.disabled : colors.main,
+            fontWeight: 500,
+          }}
+        >
+          Clear Path
         </Typography>
       </Button>
     </>
