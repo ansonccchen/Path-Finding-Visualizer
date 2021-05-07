@@ -17,7 +17,7 @@ const dfs = ({ board, endNode, startNode }: Props) => {
   while (stack.length > 0) {
     const currNode: Node = stack.pop() as Node
 
-    if (currNode.isWall) continue
+    if (currNode.isWall || currNode.isVisited) continue
     if (currNode.distance === Infinity) break
 
     currNode.isVisited = true
