@@ -1,5 +1,5 @@
 # Path Finding Visualizer
-Hello! Welcome to my Path Finding Visualizer. Currently, this project supports a couple of popular algorithms listed below; with more to come soon. This project was built using TypeScript with React.
+Hello! Welcome to my Path Finding Visualizer. Currently, this project supports a couple of popular algorithms listed below; with more to come soon. This project was built using TypeScript with React. [Click here to check it out.](https://ansonccchen.github.io/Path-Finding-Visualizer/ "Path Visualizer")
 
 ## Supported Algorithms
 ### Dijkstra's Algorithm
