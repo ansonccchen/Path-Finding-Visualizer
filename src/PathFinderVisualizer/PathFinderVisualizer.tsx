@@ -3,8 +3,7 @@ import { Div } from "../components"
 import { TopBar } from "./TopBar"
 import { InfoBar } from "./InfoBar"
 import { Board } from "./Board"
-import { Algorithms } from "../types/algorithms"
-// import { Footer } from "./Footer"
+import { Algorithms, MazeAlgorithms } from "../types/algorithms"
 
 const DEFAULT_START_ROW = 11
 const DEFAULT_START_COL = 14
@@ -32,6 +31,10 @@ const PathFinderVisualizer: React.FC = () => {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithms>(
     "Dijkstra"
   )
+  const [
+    selectedMazeAlgorithm,
+    setSelectedMazeAlgorithm,
+  ] = useState<MazeAlgorithms>("")
 
   const [startPosition, setStartPosition] = useState<number[]>([
     DEFAULT_START_ROW,
@@ -41,7 +44,6 @@ const PathFinderVisualizer: React.FC = () => {
     DEFAULT_END_ROW,
     DEFAULT_END_COL,
   ])
-  const [wallCount, setWallCount] = useState<number>(0)
   const [unvisitedCount, setUnvisitedCount] = useState<number>(
     BOARD_ROWS * BOARD_COLS
   )
@@ -51,7 +53,7 @@ const PathFinderVisualizer: React.FC = () => {
   const [pathDistance, setPathDistance] = useState<number | "" | "N/A">("")
 
   return (
-    <Div fill minHeight="100vh" minWidth={1304} overflowX="auto">
+    <Div fill minHeight="100vh" minWidth={1352} overflowX="auto">
       <TopBar
         BOARD_COLS={BOARD_COLS}
         BOARD_ROWS={BOARD_ROWS}
@@ -105,7 +107,6 @@ const PathFinderVisualizer: React.FC = () => {
         startPosition={startPosition}
         wallCountRef={wallCountRef}
       />
-      {/* <Footer /> */}
     </Div>
   )
 }

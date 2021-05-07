@@ -13,3 +13,11 @@ export const algorithms = [
   "A*",
 ] as const
 export type Algorithms = typeof algorithms[number] | ""
+
+export const mazeAlgorithms = [
+  "Recursive Division",
+  "Horizontal Skewed",
+  "Vertical Skewed",
+  "Basic Random",
+] as const
+export type MazeAlgorithms = typeof mazeAlgorithms[number] | ""

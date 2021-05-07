@@ -1,30 +1,22 @@
 import React, { useState } from "react"
-import { Typography, Button, MenuItem, Select } from "@material-ui/core"
-import { FormControl, InputLabel, Slider } from "@material-ui/core"
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
-import { withStyles } from "@material-ui/core/styles"
+import { Typography, Button } from "@material-ui/core"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { Div } from "../../components"
 import { colors } from "../../theme"
 import { animateAlgorithm } from "../../helpers/animations/animateAlgorithm"
 import { Node } from "../../types/node"
-import { AlgoSpeed, AlgoSpeeds, algoSpeedsArray } from "../../types/algorithms"
-import { algorithms, Algorithms } from "../../types/algorithms"
+import { AlgoSpeed, AlgoSpeeds, Algorithms } from "../../types/algorithms"
 import { preSetupAlgorithm } from "../../helpers/algorithms/preSetupAlgorithm"
-import { createBoard } from "../../helpers/board/createBoard"
 import { selectAlgorithm } from "../../helpers/algorithms/selectAlgorithm"
-import { iconPath } from "../../images"
+import LogoView from "./LogoView"
+import ClearButtons from "./ClearButtons"
+import VisualizationOptions from "./VisualizationOptions"
 
 const algoSpeeds: AlgoSpeeds = {
   slow: 24,
-  normal: 12,
+  normal: 10,
   fast: 2,
-}
-
-const marks: { value: number; label: AlgoSpeed }[] = []
-for (let i = 0; i < algoSpeedsArray.length; i++) {
-  marks.push({ value: i, label: algoSpeedsArray[i] })
 }
 
 interface Props {
@@ -74,7 +66,6 @@ const TopBar: React.FC<Props> = ({
   setVisitedDistance,
   wallCountRef,
 }) => {
-  const classes = useStyles()
   const [selectedAlgoSpeed, setSelectedAlgoSpeed] = useState<AlgoSpeed>(
     "normal"
   )
@@ -118,193 +109,66 @@ const TopBar: React.FC<Props> = ({
     })
   }
 
-  const resetBoard = () => {
-    const nodes = createBoard({
-      BOARD_COLS,
-      BOARD_ROWS,
-      DEFAULT_END_COL,
-      DEFAULT_END_ROW,
-      DEFAULT_START_COL,
-      DEFAULT_START_ROW,
-      nodeRefs,
-    })
-    setStartPosition([DEFAULT_START_ROW, DEFAULT_START_COL])
-    setEndPosition([DEFAULT_END_ROW, DEFAULT_END_COL])
-    if (wallCountRef.current) {
-      wallCountRef.current.count = 0
-      wallCountRef.current.innerHTML = "Count: 0"
-    }
-    setUnvisitedCount(BOARD_COLS * BOARD_ROWS)
-    setVisitedDistance("")
-    setPathDistance("")
-    setHasVisualized(false)
-    setBoard(nodes)
-  }
-  const clearWalls = () => {
-    for (const row of board) {
-      for (const node of row) {
-        if (node.isWall) {
-          node.isWall = false
-          nodeRefs.current[`${node.row}-${node.col}`].style.background =
-            colors.lightShade
-        }
-      }
-    }
-    if (wallCountRef.current) {
-      wallCountRef.current.count = 0
-      wallCountRef.current.innerHTML = "Count: 0"
-    }
-  }
-
   return (
-    <>
-      <Div
-        backgroundColor={colors.lightShade}
-        row
-        pv={8}
-        ph={24}
-        justifyContentCenter
-      >
-        <Div maxWidth={1704} row alignItemsCenter fill>
-          <img
-            src={iconPath}
-            alt="path"
-            style={{ objectFit: "contain", width: 56, height: 56 }}
-          />
-          <Div w={16} />
-          <Typography variant="h5" style={styles.title}>
-            Path Visualizer
-          </Typography>
-          <Div w={32} />
-          <Div w={200}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel>Select Algorithm</InputLabel>
-              <Select
-                disabled={isVisualizing}
-                value={selectedAlgorithm}
-                onChange={(e) =>
-                  setSelectedAlgorithm(
-                    (e.target.value as unknown) as Algorithms
-                  )
-                }
-                label="Select Algorithm"
-              >
-                {algorithms.map((algorithm, index) => {
-                  return (
-                    <MenuItem key={index} value={algorithm}>
-                      {algorithm}
-                    </MenuItem>
-                  )
-                })}
-              </Select>
-            </FormControl>
+    <Div
+      backgroundColor={colors.lightShade}
+      row
+      pv={8}
+      ph={24}
+      justifyContentCenter
+    >
+      <Div maxWidth={1704} row alignItemsCenter fill>
+        <LogoView />
+        <Div w={32} />
+        <VisualizationOptions
+          isVisualizing={isVisualizing}
+          selectedAlgorithm={selectedAlgorithm}
+          setSelectedAlgorithm={setSelectedAlgorithm}
+          setSelectedAlgoSpeed={setSelectedAlgoSpeed}
+        />
+        <Div w={32} />
+        <Button onClick={startVisualizer} disabled={isVisualizing}>
+          <Div
+            backgroundColor={
+              isVisualizing ? colors.disabled : colors.darkAccent
+            }
+            pv={8}
+            ph={16}
+            borderRadius={4}
+          >
+            <Typography style={styles.buttonText} variant="h6">
+              {isVisualizing ? "Visualizing..." : "Visualize"}
+            </Typography>
           </Div>
-          <Div w={32} />
-          <Div w={200}>
-            <Typography style={{ color: colors.main }}>
-              Algorithm Speed:
-            </Typography>
-            <SpeedSlider
-              disabled={isVisualizing}
-              defaultValue={1}
-              valueLabelFormat={(e, value) =>
-                marks.findIndex((mark) => mark.value === value) + 1
-              }
-              step={null}
-              marks={marks}
-              onChange={(e, value) =>
-                setSelectedAlgoSpeed(algoSpeedsArray[value as number])
-              }
-              max={2}
-            />
-          </Div>
-          <Div w={32} />
-          <Button onClick={startVisualizer} disabled={isVisualizing}>
-            <Div
-              backgroundColor={
-                isVisualizing ? colors.disabled : colors.darkAccent
-              }
-              pv={8}
-              ph={16}
-              borderRadius={4}
-            >
-              <Typography style={styles.buttonText} variant="h6">
-                {isVisualizing ? "Visualizing..." : "Visualize"}
-              </Typography>
-            </Div>
-          </Button>
-          <Div w={32} />
-          <Button onClick={resetBoard} disabled={isVisualizing}>
-            <Typography
-              variant="h6"
-              style={{
-                color: isVisualizing ? colors.disabled : colors.main,
-                fontWeight: 500,
-              }}
-            >
-              Reset Board
-            </Typography>
-          </Button>
-          <Div w={32} />
-          <Button onClick={clearWalls} disabled={isVisualizing}>
-            <Typography
-              variant="h6"
-              style={{
-                color: isVisualizing ? colors.disabled : colors.main,
-                fontWeight: 500,
-              }}
-            >
-              Clear Walls
-            </Typography>
-          </Button>
-        </Div>
+        </Button>
+        <Div w={32} />
+        <ClearButtons
+          BOARD_COLS={BOARD_COLS}
+          BOARD_ROWS={BOARD_ROWS}
+          board={board}
+          DEFAULT_END_COL={DEFAULT_END_COL}
+          DEFAULT_END_ROW={DEFAULT_END_ROW}
+          DEFAULT_START_COL={DEFAULT_START_COL}
+          DEFAULT_START_ROW={DEFAULT_START_ROW}
+          isVisualizing={isVisualizing}
+          nodeRefs={nodeRefs}
+          setBoard={setBoard}
+          setEndPosition={setEndPosition}
+          setHasVisualized={setHasVisualized}
+          setPathDistance={setPathDistance}
+          setStartPosition={setStartPosition}
+          setUnvisitedCount={setUnvisitedCount}
+          setVisitedDistance={setVisitedDistance}
+          wallCountRef={wallCountRef}
+        />
       </Div>
       <ToastContainer autoClose={8000} closeButton position="bottom-right" />
-    </>
+    </Div>
   )
 }
 
 const styles = {
-  title: {
-    color: colors.main,
-    fontWeight: 600,
-  },
   buttonText: { fontWeight: 500, color: colors.lightShade },
 }
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-      borderColor: "white",
-    },
-  })
-)
-
-const SpeedSlider = withStyles({
-  markLabelActive: {
-    color: colors.main,
-  },
-  rail: {
-    color: colors.lightAccent,
-  },
-  track: {
-    color: colors.darkAccent,
-  },
-  thumb: {
-    backgroundColor: colors.main,
-  },
-  mark: {
-    backgroundColor: colors.lightAccent,
-    height: 8,
-    marginTop: -3,
-  },
-  markActive: {
-    backgroundColor: colors.main,
-    height: 8,
-    marginTop: -3,
-  },
-})(Slider)
 
 export default React.memo(TopBar)
