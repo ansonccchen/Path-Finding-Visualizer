@@ -10,3 +10,6 @@ This is a common algorithm used in many graph/tree problems. It is an **unweight
 
 ### Breadth-first Search
 Another very common algorithm used in graph/tree problems. It is an **unweighted** algorithm that will always find the shortest path between two nodes.  
+
+### A*
+This is known as one of the best and most popular path finding algorithms. This algorithm is very similar to Dijkstra's, but with one difference, it uses a heuristic. It is a **weighted** algorithm that gurantees the shortest path between two nodes.
