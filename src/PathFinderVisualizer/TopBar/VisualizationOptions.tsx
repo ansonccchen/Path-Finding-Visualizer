@@ -1,12 +1,14 @@
-import React from "react"
-import { Typography, MenuItem, Select } from "@material-ui/core"
+import React, { useState } from "react"
+import { Typography, MenuItem, Select, IconButton } from "@material-ui/core"
 import { FormControl, InputLabel, Slider } from "@material-ui/core"
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
 import { withStyles } from "@material-ui/core/styles"
+import InfoIcon from "@material-ui/icons/InfoOutlined"
 import { Div } from "../../components"
 import { colors } from "../../theme"
 import { AlgoSpeed, algoSpeedsArray } from "../../types/algorithms"
 import { algorithms, Algorithms } from "../../types/algorithms"
+import InfoDialog from "./InfoDialog"
 
 const marks: { value: number; label: AlgoSpeed }[] = []
 for (let i = 0; i < algoSpeedsArray.length; i++) {
@@ -27,6 +29,7 @@ const VisualizationOptions: React.FC<Props> = ({
   setSelectedAlgoSpeed,
 }) => {
   const classes = useStyles()
+  const [isInfoDialogOpen, setIsInfoDialogOpen] = useState(false)
 
   return (
     <>
@@ -51,7 +54,10 @@ const VisualizationOptions: React.FC<Props> = ({
           </Select>
         </FormControl>
       </Div>
-      <Div w={32} />
+      <IconButton size="small" onClick={() => setIsInfoDialogOpen(true)}>
+        <InfoIcon style={{ color: colors.lightAccent, fontSize: 32 }} />
+      </IconButton>
+      <Div w={16} />
       <Div w={200}>
         <Typography style={{ color: colors.main }}>
           Visualization Speed:
@@ -70,6 +76,10 @@ const VisualizationOptions: React.FC<Props> = ({
           max={2}
         />
       </Div>
+      <InfoDialog
+        isInfoDialogOpen={isInfoDialogOpen}
+        setIsInfoDialogOpen={setIsInfoDialogOpen}
+      />
     </>
   )
 }
