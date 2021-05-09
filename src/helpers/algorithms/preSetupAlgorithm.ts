@@ -1,7 +1,7 @@
 import { colors } from "../../theme"
 import { Node } from "../../types/node"
 
-interface Props {
+interface Params {
   board: Node[][]
   DEFAULT_END_COL: number
   DEFAULT_END_ROW: number
@@ -17,7 +17,7 @@ export const preSetupAlgorithm = ({
   DEFAULT_START_COL,
   DEFAULT_START_ROW,
   nodeRefs,
-}: Props) => {
+}: Params) => {
   let startNode: Node | null = board?.[DEFAULT_START_ROW]?.[DEFAULT_START_COL]
   let endNode: Node | null = board?.[DEFAULT_END_ROW]?.[DEFAULT_END_COL]
   for (const row of board) {

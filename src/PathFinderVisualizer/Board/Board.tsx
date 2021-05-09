@@ -98,7 +98,7 @@ const Board: React.FC<Props> = ({
     })
     setUnvisitedCount(BOARD_COLS * BOARD_ROWS - visitedNodesInOrder.length + 1)
     setVisitedDistance(visitedNodesInOrder.length - 1)
-    if (shortestPath[shortestPath.length - 1].isEnd)
+    if (shortestPath.length >= 2 && shortestPath[shortestPath.length - 1].isEnd)
       setPathDistance(shortestPath.length - 1)
     else setPathDistance("N/A")
 

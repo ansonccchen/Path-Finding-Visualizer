@@ -25,8 +25,8 @@ const PathFinderVisualizer: React.FC = () => {
   const nodeRefs = useRef({})
   const wallCountRef = useRef({})
 
-  const [isVisualizing, setIsVisualizing] = useState<boolean>(false)
-  const [hasVisualized, setHasVisualized] = useState<boolean>(false)
+  const [isVisualizing, setIsVisualizing] = useState(false)
+  const [hasVisualized, setHasVisualized] = useState(false)
 
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<Algorithms>(
     "Dijkstra"
@@ -44,9 +44,7 @@ const PathFinderVisualizer: React.FC = () => {
     DEFAULT_END_ROW,
     DEFAULT_END_COL,
   ])
-  const [unvisitedCount, setUnvisitedCount] = useState<number>(
-    BOARD_ROWS * BOARD_COLS
-  )
+  const [unvisitedCount, setUnvisitedCount] = useState(BOARD_ROWS * BOARD_COLS)
   const [visitedDistance, setVisitedDistance] = useState<number | "" | "N/A">(
     ""
   )

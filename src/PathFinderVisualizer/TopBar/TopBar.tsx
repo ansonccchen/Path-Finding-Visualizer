@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Typography, Button } from "@material-ui/core"
-import { ToastContainer } from "react-toastify"
+import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { Div } from "../../components"
 import { colors } from "../../theme"
@@ -95,15 +95,25 @@ const TopBar: React.FC<Props> = ({
       selectedAlgoSpeed,
       nodeRefs,
     }).finally(() => {
+      if (
+        visitedNodesInOrder.length <= 1 ||
+        !visitedNodesInOrder[visitedNodesInOrder.length - 1].isEnd
+      ) {
+        toast.error("No such path found :(")
+      }
+
       setIsVisualizing(false)
 
       setUnvisitedCount(
         BOARD_COLS * BOARD_ROWS - visitedNodesInOrder.length + 1
       )
       setVisitedDistance(visitedNodesInOrder.length - 1)
-      if (shortestPath[shortestPath.length - 1].isEnd)
+      if (
+        shortestPath.length >= 2 &&
+        shortestPath[shortestPath.length - 1].isEnd
+      ) {
         setPathDistance(shortestPath.length - 1)
-      else setPathDistance("N/A")
+      } else setPathDistance("N/A")
 
       if (!hasVisualized) setHasVisualized(true)
     })

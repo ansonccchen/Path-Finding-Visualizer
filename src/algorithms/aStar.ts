@@ -2,13 +2,13 @@ import { Node } from "../types/node"
 import Heap from "heap-js"
 import { getUnvisitedNeighbours } from "./dijkstra"
 
-interface Props {
+interface Params {
   board: Node[][]
   endNode: Node
   startNode: Node
 }
 
-const aStar = ({ board, endNode, startNode }: Props) => {
+const aStar = ({ board, endNode, startNode }: Params) => {
   const unvisitedNodesMinHeap = new Heap(
     (a: Node, b: Node) => a.fDistance - b.fDistance
   )
@@ -58,9 +58,11 @@ const aStar = ({ board, endNode, startNode }: Props) => {
 
   let currentNode: Node | null =
     visitedNodesInOrder[visitedNodesInOrder.length - 1]
-  while (currentNode) {
-    shortestPath.unshift(currentNode)
-    currentNode = currentNode.prevNode
+  if (currentNode.isEnd) {
+    while (currentNode) {
+      shortestPath.unshift(currentNode)
+      currentNode = currentNode.prevNode
+    }
   }
   return { visitedNodesInOrder, shortestPath }
 }

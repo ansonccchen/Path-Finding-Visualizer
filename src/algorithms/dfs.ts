@@ -1,12 +1,12 @@
 import { Node } from "../types/node"
 import { getUnvisitedNeighbours } from "./dijkstra"
 
-interface Props {
+interface Params {
   board: Node[][]
   endNode: Node
   startNode: Node
 }
-const dfs = ({ board, endNode, startNode }: Props) => {
+const dfs = ({ board, endNode, startNode }: Params) => {
   const stack: Node[] = []
   startNode.distance = 0
   stack.push(startNode)
@@ -38,11 +38,12 @@ const dfs = ({ board, endNode, startNode }: Props) => {
 
   let currentNode: Node | null =
     visitedNodesInOrder[visitedNodesInOrder.length - 1]
-  while (currentNode) {
-    shortestPath.unshift(currentNode)
-    currentNode = currentNode.prevNode
+  if (currentNode.isEnd) {
+    while (currentNode) {
+      shortestPath.unshift(currentNode)
+      currentNode = currentNode.prevNode
+    }
   }
-
   return { visitedNodesInOrder, shortestPath }
 }
 

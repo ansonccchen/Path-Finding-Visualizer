@@ -1,10 +1,8 @@
-import { toast } from "react-toastify"
 import { Node } from "../../types/node"
-
 import { AlgoSpeed, AlgoSpeeds } from "../../types/algorithms"
 import "./animations.css"
 
-interface Props {
+interface Params {
   algoSpeeds: AlgoSpeeds
   nodeRefs: React.MutableRefObject<{ [name: string]: any }>
   selectedAlgoSpeed: AlgoSpeed
@@ -18,11 +16,16 @@ export const animateAlgorithm = async ({
   selectedAlgoSpeed,
   shortestPath,
   visitedNodesInOrder,
-}: Props) => {
+}: Params) => {
   const delay = algoSpeeds[selectedAlgoSpeed]
   const shortestPathDelay = 24
-  if (visitedNodesInOrder.length <= 1) {
-    toast.error("No such path found :(")
+
+  if (!visitedNodesInOrder[visitedNodesInOrder.length - 1].isEnd) {
+    for (let i = 1; i < visitedNodesInOrder.length; i++) {
+      setTimeout(() => {
+        animateVisitedNodes({ nodeRefs, visitedNodesInOrder, i })
+      }, delay * i)
+    }
   } else {
     for (let i = 1; i < visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length - 1) {
@@ -31,9 +34,7 @@ export const animateAlgorithm = async ({
         }, delay * i)
       } else {
         setTimeout(() => {
-          nodeRefs.current[
-            `${visitedNodesInOrder[i].row}-${visitedNodesInOrder[i].col}`
-          ].classList.add("node-visited")
+          animateVisitedNodes({ nodeRefs, visitedNodesInOrder, i })
         }, delay * i)
       }
     }
@@ -44,28 +45,34 @@ export const animateAlgorithm = async ({
       resolve,
       delay * visitedNodesInOrder.length +
         shortestPath.length * shortestPathDelay +
-        1525
+        1500
     )
   })
 }
 
-interface Params {
-  shortestPath: Node[]
-  shortestPathDelay: number
+const animateVisitedNodes = ({
+  nodeRefs,
+  visitedNodesInOrder,
+  i,
+}: {
   nodeRefs: React.MutableRefObject<{ [name: string]: any }>
+  visitedNodesInOrder: Node[]
+  i: number
+}) => {
+  nodeRefs.current[
+    `${visitedNodesInOrder[i].row}-${visitedNodesInOrder[i].col}`
+  ].classList.add("node-visited")
 }
 
 const animateShortestPath = ({
   shortestPath,
   shortestPathDelay,
   nodeRefs,
-}: Params) => {
-  if (!shortestPath[shortestPath.length - 1].isEnd) {
-    const { row, col } = shortestPath[shortestPath.length - 1]
-    nodeRefs.current[`${row}-${col}`].classList.add("node-visited")
-    toast.error("No such path found :(")
-    return
-  }
+}: {
+  shortestPath: Node[]
+  shortestPathDelay: number
+  nodeRefs: React.MutableRefObject<{ [name: string]: any }>
+}) => {
   for (let j = 1; j < shortestPath.length; j++) {
     setTimeout(() => {
       nodeRefs.current[

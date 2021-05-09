@@ -1,13 +1,13 @@
 import { Node } from "../types/node"
 import { getUnvisitedNeighbours } from "./dijkstra"
 
-interface Props {
+interface Params {
   board: Node[][]
   endNode: Node
   startNode: Node
 }
 
-const bfs = ({ board, endNode, startNode }: Props) => {
+const bfs = ({ board, endNode, startNode }: Params) => {
   const queue: Node[] = []
   startNode.distance = 0
   queue.push(startNode)
@@ -19,7 +19,6 @@ const bfs = ({ board, endNode, startNode }: Props) => {
     const currNode: Node = queue.shift() as Node
 
     if (currNode.isWall) continue
-    if (currNode.distance === Infinity) break
 
     currNode.isVisited = true
     visitedNodesInOrder.push(currNode)
@@ -32,7 +31,6 @@ const bfs = ({ board, endNode, startNode }: Props) => {
     })
     for (const neighbour of unvisitedNeighbours) {
       neighbour.isVisited = true
-      neighbour.distance = currNode.distance + 1
       neighbour.prevNode = currNode
       queue.push(neighbour)
     }
@@ -40,10 +38,13 @@ const bfs = ({ board, endNode, startNode }: Props) => {
 
   let currentNode: Node | null =
     visitedNodesInOrder[visitedNodesInOrder.length - 1]
-  while (currentNode) {
-    shortestPath.unshift(currentNode)
-    currentNode = currentNode.prevNode
+  if (currentNode.isEnd) {
+    while (currentNode) {
+      shortestPath.unshift(currentNode)
+      currentNode = currentNode.prevNode
+    }
   }
+
   return { visitedNodesInOrder, shortestPath }
 }
 

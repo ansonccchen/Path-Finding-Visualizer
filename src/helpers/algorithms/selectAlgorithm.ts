@@ -2,7 +2,7 @@ import { Algorithms } from "../../types/algorithms"
 import { Node } from "../../types/node"
 import { dijkstra, dfs, bfs, aStar } from "../../algorithms"
 
-interface Props {
+interface Params {
   selectedAlgorithm: Algorithms
   board: Node[][]
   endNode: Node
@@ -14,7 +14,7 @@ export const selectAlgorithm = ({
   board,
   endNode,
   startNode,
-}: Props) => {
+}: Params) => {
   const visitedNodesInOrder: Node[] = []
   const shortestPath: Node[] = []
 

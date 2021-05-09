@@ -1,13 +1,13 @@
 import Heap from "heap-js"
 import { Node } from "../types/node"
 
-interface Props {
+interface Params {
   board: Node[][]
   endNode: Node
   startNode: Node
 }
 
-const dijkstra = ({ startNode, endNode, board }: Props) => {
+const dijkstra = ({ startNode, endNode, board }: Params) => {
   const unvisitedNodesMinHeap = new Heap(
     (a: Node, b: Node) => a.distance - b.distance
   )
@@ -47,9 +47,11 @@ const dijkstra = ({ startNode, endNode, board }: Props) => {
 
   let currentNode: Node | null =
     visitedNodesInOrder[visitedNodesInOrder.length - 1]
-  while (currentNode) {
-    shortestPath.unshift(currentNode)
-    currentNode = currentNode.prevNode
+  if (currentNode.isEnd) {
+    while (currentNode) {
+      shortestPath.unshift(currentNode)
+      currentNode = currentNode.prevNode
+    }
   }
 
   return { visitedNodesInOrder, shortestPath }
